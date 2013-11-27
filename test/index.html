@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html class="no-js">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Unfinished Toggler Test</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="test.css">
+  </head>
+  <body>
+
+    <h1>Unfinished Toggler Tests</h1>
+
+    <h2>Accordion</h2>
+    <div id="accordion">
+      <div class="uft-item accordion-item">
+        <h3 class="uft-trigger accordion-trigger">House</h3>
+        <p class="accordion-content uft-content">Something, such as a burrow or shell, that serves as a shelter or habitation for a wild animal. Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium.</p>
+      </div>
+      <div class="uft-item accordion-item">
+        <h3 class="uft-trigger accordion-trigger">Cow</h3>
+        <p class="accordion-content uft-content">The mature female of cattle of the genus Bos.</p>
+      </div>
+      <div class="uft-item accordion-item">
+        <h3 class="uft-trigger accordion-trigger">Magic</h3>
+        <p class="accordion-content uft-content">The art that purports to control or forecast natural events, effects, or forces by invoking the supernatural.</p>
+      </div>
+    </div>
+
+    <h2>Tabs</h2>
+    <div id="tabs">
+      <ul class="tab-triggers">
+        <li class="uft-trigger" data-uft-group="1">First</li>
+        <li class="uft-trigger" data-uft-group="2">Second</li>
+        <li class="uft-trigger" data-uft-group="3">Third</li>
+      </ul>
+      <div class="tab-content-area">
+        <section class="uft-content tab-content" data-uft-group="1">
+          <h3>First</h3>
+          <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.</p>
+        </section>
+        <section class="uft-content tab-content" data-uft-group="2">
+          <h3>Second</h3>
+          <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium.</p>
+        </section>
+        <section class="uft-content tab-content" data-uft-group="3">
+          <h3>Third</h3>
+          <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim.</p>
+        </section>
+      </div>
+    </div>
+
+    <h3>Tooltips</h3>
+
+    <div id="tooltips">
+      <div class="tooltip-group">
+        <button class="tooltip-btn" data-uft-group="1">Tooltip 1</button>
+        <div class="tooltip-content" data-uft-group="1">Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim.</div>
+      </div>
+      <div class="tooltip-group">
+        <button class="tooltip-btn" data-uft-group="2">Tooltip 2</button>
+        <div class="tooltip-content" data-uft-group="2">Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim.</div>
+      </div>
+      <div class="tooltip-group">
+        <button class="tooltip-btn" data-uft-group="3">Tooltip 3</button>
+        <div class="tooltip-content" data-uft-group="3">
+          <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim.</p>
+          <p>
+            <button class="tooltip-btn" data-uft-group="3">Close</button>
+          </p></div>
+      </div>
+    </div>
+
+
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+    <script src="../jquery.unfinishedToggler.js"></script>
+    <script src="test.js"></script>
+  </body>
+</html>

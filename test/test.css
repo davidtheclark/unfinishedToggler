@@ -1,0 +1,68 @@
+.accordion-item {
+  border: 2px solid;
+  margin-bottom: 0.3em;
+  padding: 0 1em;
+}
+.accordion-content {
+  height: 0;
+  overflow: hidden;
+  margin: 0;
+  -webkit-transition: height 0.3s linear;
+  -moz-transition: height 0.3s linear;
+  -ms-transition: height 0.3s linear;
+  -o-transition: height 0.3s linear;
+  transition: height 0.3s linear;
+}
+
+.accordion-trigger:before {
+  float: right;
+  content: "V";
+}
+.uft-on .accordion-trigger:before {
+  content: "X";
+}
+
+.tab-triggers {
+  margin: 0;
+  padding: 0;
+}
+.tab-triggers li {
+  display: inline-block;
+  padding: 0 1em;
+  border: 1px solid;
+}
+.tab-triggers li.uft-on {
+  background: gray;
+}
+
+.tab-content-area {
+  position: relative;
+}
+
+.tab-content {
+  display: none;
+}
+.tab-content.uft-on {
+  display: block;
+}
+
+
+.tooltip-group {
+  display: inline-block;
+  position: relative;
+}
+.tooltip-btn {
+  height: 50px;
+}
+.tooltip-content {
+  display: none;
+  position: absolute;
+  top: 50px;
+  left: 0;
+  width: 200px;
+  border: 1px solid;
+  padding: 0.3em;
+}
+.tooltip-content.is-active {
+  display: block;
+}
