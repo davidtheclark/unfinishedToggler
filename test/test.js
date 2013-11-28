@@ -1,61 +1,36 @@
-(function($) {
-
-  function animateHeight(element, action) {
-    var $el = $(element);
-
-    if (action === 'open') {
-      _animateHeightOpen($el);
-    } else if (action === 'close') {
-      _animateHeightClose($el);
-    }
-
-    function _animateHeightOpen($el) {
-      var $parent = $el.parent();
-      var $clone = $el.clone()
-        .css({
-          'width': $el.width(),
-          'position': 'absolute',
-          'z-index': '-10',
-          'visibility': 'hidden'
-        })
-        .appendTo($parent);
-      var cloneContentHeight = $clone
-        .height('auto')
-        .height();
-      $clone.remove();
-      $el.height(cloneContentHeight);
-    }
-
-    function _animateHeightClose($el) {
-      $el.height(0);
-    }
-  }
-
-  $.fn.animateHeight = function(action) {
-    return this.each(function () {
-      animateHeight(this, action);
-    });
-  };
-})(jQuery);
-
-
 $('#accordion').unfinishedToggler({
   onlyOneOn: false,
-  onCallback: function($el) {
-    $el.find('.accordion-content').animateHeight('open');
+  scattered: true,
+  contentSelector: '.uft-group',
+  onCallback: function(uft) {
+    uft.$el.find('.accordion-content').slideDown();
+    $('html, body').animate({scrollTop: uft.$el.offset().top});
   },
-  offCallback: function($el) {
-    $el.find('.accordion-content').animateHeight('close');
+  onDelay: 300,
+  offCallback: function(uft) {
+    setTimeout(function() {
+      uft.$el.find('.accordion-content').slideUp();
+    }, 300);
   }
 });
 
 $('#tabs').unfinishedToggler({
-  scattered: true
+  scattered: true,
+  allOff: false
 });
 
-$('#tooltips').unfinishedToggler({
-  scattered: true,
-  triggerSelector: '.tooltip-btn',
-  contentSelector: '.tooltip-content',
-  onClass: 'is-active'
+$('#popups').unfinishedToggler({
+  groupSelector: '.popup-group',
+  contentSelector: '.popup-content',
+  onClass: 'is-active',
+  clickOutsideCloses: true
+});
+
+
+$('#popups').unfinishedToggler('turnOn', $('#popupfirst'));
+
+
+$('#insider').unfinishedToggler({
+  groupSelector: '.insider-group',
+  triggerSelector: '.insider-trigger'
 });

@@ -1,26 +1,46 @@
+/* accordion */
+
 .accordion-item {
   border: 2px solid;
   margin-bottom: 0.3em;
   padding: 0 1em;
+  width: 300px;
 }
 .accordion-content {
-  height: 0;
-  overflow: hidden;
-  margin: 0;
-  -webkit-transition: height 0.3s linear;
-  -moz-transition: height 0.3s linear;
-  -ms-transition: height 0.3s linear;
-  -o-transition: height 0.3s linear;
-  transition: height 0.3s linear;
+  display: none;
+  opacity: 0;
+  -webkit-transition: opacity 0.3s linear;
+  -moz-transition: opacity 0.3s linear;
+  -ms-transition: opacity 0.3s linear;
+  -o-transition: opacity 0.3s linear;
+  transition: opacity 0.3s linear;
 }
-
+.accordion-item.uft-on .accordion-content {
+  opacity: 1;
+}
+.accordion-trigger {
+  margin: 0;
+  padding: 0.5em;
+}
+.accordion-trigger .inner-close {
+  display: none;
+}
 .accordion-trigger:before {
   float: right;
   content: "V";
 }
-.uft-on .accordion-trigger:before {
+.accordion-item.uft-on .accordion-trigger:before {
   content: "X";
 }
+.accordion-item.uft-on .accordion-trigger .inner-close {
+  display: block;
+}
+.accordion-item.uft-on .accordion-trigger .inner-open {
+  display: none;
+}
+
+
+/* tabs */
 
 .tab-triggers {
   margin: 0;
@@ -46,16 +66,18 @@
   display: block;
 }
 
+/* popup */
 
-.tooltip-group {
+.popup-group {
   display: inline-block;
   position: relative;
 }
-.tooltip-btn {
+.popup-btn {
   height: 50px;
 }
-.tooltip-content {
+.popup-content {
   display: none;
+  background: white;
   position: absolute;
   top: 50px;
   left: 0;
@@ -63,6 +85,17 @@
   border: 1px solid;
   padding: 0.3em;
 }
-.tooltip-content.is-active {
+.popup-group.is-active .popup-content {
+  display: block;
+}
+.popup-close {
+  float: right;
+}
+
+
+.insider-content {
+  display: none;
+}
+.insider-group.uft-on .insider-content {
   display: block;
 }

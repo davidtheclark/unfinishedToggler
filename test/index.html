@@ -13,18 +13,51 @@
 
     <h2>Accordion</h2>
     <div id="accordion">
-      <div class="uft-item accordion-item">
-        <h3 class="uft-trigger accordion-trigger">House</h3>
-        <p class="accordion-content uft-content">Something, such as a burrow or shell, that serves as a shelter or habitation for a wild animal. Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium.</p>
+      <div class="uft-group accordion-item" data-uft-group="11">
+        <h3 class="uft-trigger accordion-trigger" data-uft-group="11">
+          <span class="inner-open">Read more about "House"</span>
+          <span class="inner-close">Read less now!</span>
+        </h3>
+        <div class="accordion-content uft-content">
+          <div class="accordion-content-inner">
+            <p>Something, such as a burrow or shell, that serves as a shelter or habitation for a wild animal. Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium.</p>
+            <div id="insider">
+              <div class="insider-group">
+                <button class="insider-trigger">insider 1</button>
+                <div class="insider-content">
+                  Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa.
+                </div>
+              </div>
+              <div class="insider-group">
+                <button class="insider-trigger">insider 2</button>
+                <div class="insider-content">
+                  Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
-      <div class="uft-item accordion-item">
-        <h3 class="uft-trigger accordion-trigger">Cow</h3>
-        <p class="accordion-content uft-content">The mature female of cattle of the genus Bos.</p>
+      <div class="uft-group accordion-item" data-uft-group="12">
+        <h3 class="uft-trigger accordion-trigger" data-uft-group="12">
+          <span class="inner-open">Read more about "Cow"</span>
+          <span class="inner-close">Read less now!</span>
+        </h3>
+        <div class="accordion-content uft-content">
+          <p class="accordion-content-inner">The mature female of cattle of the genus Bos.</p>
+        </div>
       </div>
-      <div class="uft-item accordion-item">
-        <h3 class="uft-trigger accordion-trigger">Magic</h3>
-        <p class="accordion-content uft-content">The art that purports to control or forecast natural events, effects, or forces by invoking the supernatural.</p>
+      <div class="uft-group accordion-item" data-uft-group="13">
+        <h3 class="uft-trigger accordion-trigger" data-uft-group="13">Magic</h3>
+        <div class="accordion-content uft-content">
+          <p class="accordion-content-inner">The art that purports to control or forecast natural events, effects, or forces by invoking the supernatural.</p>
+        </div>
       </div>
+      <ul>
+        <li class="uft-trigger" data-uft-group="11">house</li>
+        <li class="uft-trigger" data-uft-group="12">cow</li>
+        <li class="uft-trigger" data-uft-group="13">maginc</li>
+      </ul>
     </div>
 
     <h2>Tabs</h2>
@@ -50,29 +83,34 @@
       </div>
     </div>
 
-    <h3>Tooltips</h3>
+    <h2>Popups</h2>
 
-    <div id="tooltips">
-      <div class="tooltip-group">
-        <button class="tooltip-btn" data-uft-group="1">Tooltip 1</button>
-        <div class="tooltip-content" data-uft-group="1">Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim.</div>
+    <div id="popups">
+      <div id="popupfirst" class="popup-group">
+        <button class="popup-btn uft-trigger">popup 1</button>
+        <div class="popup-content">
+          <button class="popup-close uft-trigger">X</button>
+          Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa.
+        </div>
       </div>
-      <div class="tooltip-group">
-        <button class="tooltip-btn" data-uft-group="2">Tooltip 2</button>
-        <div class="tooltip-content" data-uft-group="2">Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim.</div>
+      <div class="popup-group">
+        <button class="popup-btn uft-trigger">popup 2</button>
+        <div class="popup-content">
+          <button class="popup-close uft-trigger">X</button>
+          Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.
+        </div>
       </div>
-      <div class="tooltip-group">
-        <button class="tooltip-btn" data-uft-group="3">Tooltip 3</button>
-        <div class="tooltip-content" data-uft-group="3">
-          <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim.</p>
-          <p>
-            <button class="tooltip-btn" data-uft-group="3">Close</button>
-          </p></div>
+      <div class="popup-group">
+        <button class="popup-btn uft-trigger">popup 3</button>
+        <div class="popup-content">
+          <button class="popup-close uft-trigger">X</button>
+          Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa.
+        </div>
       </div>
     </div>
 
-
-    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+    <!--<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>-->
+    <script src="jquery.js"></script>
     <script src="../jquery.unfinishedToggler.js"></script>
     <script src="test.js"></script>
   </body>
