@@ -1,4 +1,12 @@
-$('#nav').unfinishedToggler({
+var tabs = new UnfinishedToggler({
+  root: '#tabs',
+  scattered: true,
+  allOff: false
+});
+
+
+var nav = new UnfinishedToggler({
+  root: '#nav',
   groupSelector: 'li',
   triggerSelector: 'li > a',
   contentSelector: '.subnav',
@@ -7,7 +15,8 @@ $('#nav').unfinishedToggler({
   clickOutsideCloses: true
 });
 
-$('#accordion').unfinishedToggler({
+var accordion = new UnfinishedToggler({
+  root: '#accordion',
   onlyOneOn: false,
   scattered: true,
   contentSelector: '.uft-group',
@@ -23,15 +32,9 @@ $('#accordion').unfinishedToggler({
   }
 });
 
-$('#tabs').unfinishedToggler({
-  scattered: true,
-  allOff: false
-});
 
-
-
-
-$('#insider').unfinishedToggler({
+var insider = new UnfinishedToggler({
+  root: '#insider',
   groupSelector: '.insider-group',
   triggerSelector: '.insider-trigger'
 });

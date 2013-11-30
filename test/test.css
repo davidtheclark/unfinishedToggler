@@ -27,23 +27,18 @@
 }
 
 .tab-content-area {
+  background: white;
   border: 1px solid;
   padding: 1em;
   position: relative;
   overflow: hidden;
 }
 
-.tab-content {
-  background: white;
+.tab-content.uft-off {
   position: absolute;
-  z-index: -1;
-  visibility: hidden;
-}
-
-.tab-content.uft-on {
-  position: static;
-  z-index: 1;
-  visibility: visible;
+  top: 0;
+  left: 0;
+  z-index: -10;
 }
 
 .accordion-content {

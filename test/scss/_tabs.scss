@@ -23,6 +23,7 @@
 }
 
 .tab-content-area {
+  background: white;
   border: 1px solid;
   padding: 1em;
   position: relative;
@@ -30,13 +31,10 @@
 }
 
 .tab-content {
-  background: white;
-  position: absolute;
-  z-index: -1;
-  visibility: hidden;
-  &.uft-on {
-    position: static;
-    z-index: 1;
-    visibility: visible;
+  &.uft-off {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: -10;
   }
 }
