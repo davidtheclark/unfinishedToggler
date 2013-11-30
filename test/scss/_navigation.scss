@@ -1,0 +1,55 @@
+$nav-i-y: 4em;
+
+.nav {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  &:after {
+    content: "";
+    display: table;
+    clear: both;
+  }
+  & > li {
+    float: left;
+    position: relative;
+    & > a {
+      border: 1px solid;
+      display: block;
+      padding: 0 2em;
+      height: $nav-i-y;
+      line-height: $nav-i-y;
+    }
+  }
+}
+
+.nav > li > .subnav {
+  padding: 0;
+  background: gray;
+  list-style-type: none;
+  margin: 0;
+  position: absolute;
+  top: $nav-i-y;
+  width: 7em;
+  & > li {
+    border: 1px solid;
+    &:not(:first-child) {
+      border-top: none;
+    }
+    & > a {
+      display: block;
+      padding: 1em;
+    }
+  }
+}
+
+// toggling business
+.nav > li {
+  & > .subnav {
+    left: -9999px;
+    z-index: -1;
+  }
+  &.is-active > .subnav {
+    left: 0;
+    z-index: 5;
+  }
+}

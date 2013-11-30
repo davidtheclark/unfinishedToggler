@@ -1,3 +1,12 @@
+$('#nav').unfinishedToggler({
+  groupSelector: 'li',
+  triggerSelector: 'li > a',
+  contentSelector: '.subnav',
+  event: 'click focus',
+  onClass: 'is-active',
+  clickOutsideCloses: true
+});
+
 $('#accordion').unfinishedToggler({
   onlyOneOn: false,
   scattered: true,
@@ -19,15 +28,7 @@ $('#tabs').unfinishedToggler({
   allOff: false
 });
 
-$('#popups').unfinishedToggler({
-  groupSelector: '.popup-group',
-  contentSelector: '.popup-content',
-  onClass: 'is-active',
-  clickOutsideCloses: true
-});
 
-
-$('#popups').unfinishedToggler('turnOn', $('#popupfirst'));
 
 
 $('#insider').unfinishedToggler({

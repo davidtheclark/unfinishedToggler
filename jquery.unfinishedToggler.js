@@ -1,5 +1,13 @@
 ;(function($) {
 
+  function optionalDelay(fn, delay) {
+    if (delay) {
+      window.setTimeout(fn, delay);
+    } else {
+      fn();
+    }
+  }
+
   function UnfinishedToggler(element, options) {
 
     // Initialization.
@@ -11,30 +19,47 @@
         // be toggled. If `scattered` is false, $items only
         // include the containing items; if `scattered` is
         // true, items include triggers and contents.
-        $items = (!settings.scattered) ? $root.find(settings.groupSelector) : $triggers.add(settings.contentSelector);
+        $items = (!settings.scattered) ? $root.find(settings.groupSelector) : $triggers.add(settings.contentSelector),
+        onCount = 0,
+        changeFn = (!settings.scattered) ? changeGathered : changeScattered;
 
     // Return public methods.
     return {
-      turnOn: turnOn,
-      init: init
+      uftTrigger: uftTrigger,
+      init: init,
+      disable: disable,
+      enable: enable
     };
 
     function init() {
-      var changeFn = (!settings.scattered) ? changeGathered : changeScattered;
-      $triggers.on(settings.event, function() {
-        changeFn($(this));
-      });
 
-      // If there is an initial to turn on, do it.
+      enable();
+
       if (settings.initial) {
-        $(settings.initial).addClass(onClass);
+        // If there is an initial to turn on, do it.
+        uftTrigger(settings.initial);
 
-      // Otherwise, if no initial, but allOff is not allowed
-      // and nothing is turned on in the markup ...
-      // trigger the first trigger.
       } else if (!settings.allOff && getOnItems().length === 0) {
-        $triggers.first().trigger(settings.event);
+        // Otherwise, if no initial, but allOff is not allowed
+        // and nothing is turned on in the markup ...
+        // trigger the first trigger.
+        $triggers.first()
+          .trigger(settings.event);
       }
+    }
+
+    function enable() {
+      $triggers.on(settings.event, function() {
+        uftTrigger(this);
+      });
+    }
+
+    function disable() {
+      $triggers.off();
+    }
+
+    function uftTrigger(el) {
+      changeFn($(el));
     }
 
     function getOnItems() {
@@ -46,22 +71,21 @@
     }
 
     function changeScattered($el) {
-      var groupId = $el.data('uft-group'),
-          groupSelector = '[data-uft-group="' + groupId + '"]',
-          $group = $items.filter(groupSelector);
-      effectChange($group);
+      effectChange($items.filter('[data-uft-group="' + $el.data('uft-group') + '"]'));
     }
 
     function turnOn($el) {
       toggleOnOff($el, 'on', settings.onDelay, settings.onCallback);
+      onCount++;
     }
 
     function turnOff($el) {
       toggleOnOff($el, 'off', settings.offDelay, settings.offCallback);
+      onCount--;
     }
 
     function toggleOnOff($el, action, delay, callback) {
-      function doIt() {
+      function doTheToggling() {
         if (action === 'on') {
           $el.addClass(onClass);
         } else {
@@ -71,11 +95,7 @@
           clickOutsideCloses($el, action);
         }
       }
-      if (delay) {
-        setTimeout(doIt, delay);
-      } else {
-        doIt();
-      }
+      optionalDelay(doTheToggling, delay);
       callback({
         'action': action,
         '$el': $el
@@ -84,62 +104,64 @@
 
     function effectChange($el) {
       var onItems = getOnItems();
-      // If $el is being turned on ...
       if (!$el.hasClass(onClass)) {
-        // ... and onlyOneOn is true, turn off any
-        // already-on items before you ...
+        // If $el is being turned on ...
         if (settings.onlyOneOn) {
+          // ... and onlyOneOn is true, turn off any
+          // already-on items before you ...
           turnOff(onItems);
         }
         // ... turn $clickedItem on.
         turnOn($el);
-
-      // If $el is being turned off ...
-      } else {
-        // ... only turn it off if allOff is true
+      } else if (settings.allOff || (!settings.allOff && onCount > 1)) {
+        // If $el is being turned off only turn it off if allOff is true
         // or allOff is false but at least one other item is on.
-        if (settings.allOff || (!settings.allOff && onItems.length > 1)) {
-          turnOff($el);
-        }
+        turnOff($el);
       }
     }
 
     function clickOutsideCloses($el, action) {
       if (action === 'on') {
-        enable();
+        outsideEnable();
       } else {
-        disable();
+        outsideDisable();
       }
-      function enable() {
-        var ev = 'click touchstart';
+      function outsideEnable() {
+        var ev = 'click touchend';
         $el.on(ev, function(e) {
           e.stopPropagation();
         });
-        $('html').one(ev, function(e) {
-          e.preventDefault();
-          turnOff($el);
-          disable();
+        $(document).one(ev, function(e) {
+          if (!$el.is($(ev.target))) {
+            turnOff($el);
+            outsideDisable();
+          }
         });
       }
-      function disable() {
-        $('html').off();
+      function outsideDisable() {
+        $(document).off();
       }
     }
   }
 
   $.fn.unfinishedToggler = function(options) {
-    // slice arguments to leave only arguments after function name
     var args = Array.prototype.slice.call(arguments, 1);
     return this.each(function() {
       var item = $(this),
           instance = item.data('uft');
       if (!instance) {
-        // create plugin instance and save it in data
+        // Create plugin instance and save it in data.
         var uft = new UnfinishedToggler(this, options);
         item.data('uft', uft);
+        // Then initialize.
         uft.init();
       } else if (typeof options === 'string') {
-        instance[options].apply(instance, args);
+        // Allow the calling of methods.
+        if (instance[options]) {
+          instance[options].apply(instance, args);
+        } else {
+          throw new Error('UnfinishedToggler does not have a method "' + options + '".');
+        }
       }
     });
   };
@@ -157,20 +179,20 @@
     'onlyOneOn' : true,
     // all items can be off at the same time
     'allOff' : true,
-    // a selector for an initially-on item
+    // a selector for an initially-triggered trigger
     'initial' : false,
     // the event(s) that triggers a change
     'event' : 'click',
     // a callback to perform when turning on
-    'onCallback': function() {},
+    'onCallback': function(){},
     // a callback to perform when turning off
-    'offCallback': function() {},
+    'offCallback': function(){},
     // delay before changing class when turning on
-    onDelay: 0,
+    'onDelay': 0,
     // delay before changing class when turning off
-    offDelay: 0,
+    'offDelay': 0,
     // a click outside of the group closes it
-    clickOutsideCloses: false
+    'clickOutsideCloses': false
   };
 
 })(jQuery);

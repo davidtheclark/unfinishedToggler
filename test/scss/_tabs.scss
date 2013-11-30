@@ -1,0 +1,42 @@
+.tab-triggers {
+  cursor: pointer;
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  &:after {
+    content: "";
+    display: block;
+    clear: both;
+  }
+  li {
+    float: left;
+    padding: 1em;
+    border-top: 1px solid;
+    border-right: 1px solid;
+    &.uft-on {
+      background: gray;
+    }
+    &:first-child {
+      border-left: 1px solid;
+    }
+  }
+}
+
+.tab-content-area {
+  border: 1px solid;
+  padding: 1em;
+  position: relative;
+  overflow: hidden;
+}
+
+.tab-content {
+  background: white;
+  position: absolute;
+  z-index: -1;
+  visibility: hidden;
+  &.uft-on {
+    position: static;
+    z-index: 1;
+    visibility: visible;
+  }
+}

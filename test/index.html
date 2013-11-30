@@ -11,10 +11,69 @@
 
     <h1>Unfinished Toggler Tests</h1>
 
+    <h2>Navigation Dropdowns</h2>
+
+    <ul id="nav" class="nav">
+      <li>
+        <a href="#">Home</a>
+      </li>
+      <li>
+        <a href="#">About</a>
+        <ul class="subnav">
+          <li>
+            <a href="#">The Person</a>
+          </li>
+          <li>
+            <a href="#">The Dog</a>
+          </li>
+          <li>
+            <a href="#">The Shop</a>
+          </li>
+        </ul>
+      </li>
+      <li>
+        <a href="#">Work</a>
+        <ul class="subnav">
+          <li>
+            <a href="#">On People</a>
+          </li>
+          <li>
+            <a href="#">On Animals</a>
+          </li>
+        </ul>
+      </li>
+      <li>
+        <a href="#">Blog</a>
+      </li>
+    </ul>
+
+    <h2>Tabs</h2>
+    <div id="tabs">
+      <ul class="tab-triggers">
+        <li class="uft-trigger" data-uft-group="1">First</li>
+        <li class="uft-trigger" data-uft-group="2">Second</li>
+        <li class="uft-trigger" data-uft-group="3">Third</li>
+      </ul>
+      <div class="tab-content-area">
+        <section class="uft-content tab-content" data-uft-group="1">
+          <h3>First</h3>
+          <p>This elusive quality it is, which causes the thought of whiteness, when divorced from more kindly associations, and coupled with any object terrible in itself, to heighten that terror to the furthest bounds. Witness the white bear of the poles, and the white shark of the tropics; what but their smooth, flaky whiteness makes them the transcendent horrors they are? </p>
+        </section>
+        <section class="uft-content tab-content" data-uft-group="2">
+          <h3>Second</h3>
+          <p>That ghastly whiteness it is which imparts such an abhorrent mildness, even more loathsome than terrific, to the dumb gloating of their aspect. So that not the fierce-fanged tiger in his heraldic coat can so stagger courage as the white-shrouded bear or shark.</p>
+        </section>
+        <section class="uft-content tab-content" data-uft-group="3">
+          <h3>Third</h3>
+          <p>With reference to the Polar bear, it may possibly be urged by him who would fain go still deeper into this matter, that it is not the whiteness, separately regarded, which heightens the intolerable hideousness of that brute; for, analysed, that heightened hideousness, it might be said, only rises from the circumstance, that the irresponsible ferociousness of the creature stands invested in the fleece of celestial innocence and love; and hence, by bringing together two such opposite emotions in our minds, the Polar bear frightens us with so unnatural a contrast.</p>
+        </section>
+      </div>
+    </div>
+
     <h2>Accordion</h2>
     <div id="accordion">
       <div class="uft-group accordion-item" data-uft-group="11">
-        <h3 class="uft-trigger accordion-trigger" data-uft-group="11">
+        <h3 id="triggerme" class="uft-trigger accordion-trigger" data-uft-group="11">
           <span class="inner-open">Read more about "House"</span>
           <span class="inner-close">Read less now!</span>
         </h3>
@@ -58,55 +117,6 @@
         <li class="uft-trigger" data-uft-group="12">cow</li>
         <li class="uft-trigger" data-uft-group="13">maginc</li>
       </ul>
-    </div>
-
-    <h2>Tabs</h2>
-    <div id="tabs">
-      <ul class="tab-triggers">
-        <li class="uft-trigger" data-uft-group="1">First</li>
-        <li class="uft-trigger" data-uft-group="2">Second</li>
-        <li class="uft-trigger" data-uft-group="3">Third</li>
-      </ul>
-      <div class="tab-content-area">
-        <section class="uft-content tab-content" data-uft-group="1">
-          <h3>First</h3>
-          <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.</p>
-        </section>
-        <section class="uft-content tab-content" data-uft-group="2">
-          <h3>Second</h3>
-          <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium.</p>
-        </section>
-        <section class="uft-content tab-content" data-uft-group="3">
-          <h3>Third</h3>
-          <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim.</p>
-        </section>
-      </div>
-    </div>
-
-    <h2>Popups</h2>
-
-    <div id="popups">
-      <div id="popupfirst" class="popup-group">
-        <button class="popup-btn uft-trigger">popup 1</button>
-        <div class="popup-content">
-          <button class="popup-close uft-trigger">X</button>
-          Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa.
-        </div>
-      </div>
-      <div class="popup-group">
-        <button class="popup-btn uft-trigger">popup 2</button>
-        <div class="popup-content">
-          <button class="popup-close uft-trigger">X</button>
-          Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.
-        </div>
-      </div>
-      <div class="popup-group">
-        <button class="popup-btn uft-trigger">popup 3</button>
-        <div class="popup-content">
-          <button class="popup-close uft-trigger">X</button>
-          Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa.
-        </div>
-      </div>
     </div>
 
     <!--<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>-->

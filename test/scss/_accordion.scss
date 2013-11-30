@@ -1,0 +1,51 @@
+.accordion-content {
+  display: none;
+  opacity: 0;
+  transition: opacity 0.3s linear;
+}
+
+.accordion-trigger {
+  margin: 0;
+  padding: 0.5em;
+
+  &:before {
+    float: right;
+    content: "V";
+  }
+
+  .inner-close {
+    display: none;
+  }
+}
+
+
+.accordion-item {
+  border: 2px solid;
+  margin-bottom: 0.3em;
+  padding: 0 1em;
+  width: 300px;
+}
+
+// turned on
+
+.accordion-item.uft-on {
+
+  .accordion-content {
+    opacity: 1;
+  }
+
+  .accordion-trigger {
+
+    .inner-close {
+      display: block;
+    }
+
+    .inner-open {
+      display: none;
+    }
+
+    &:before {
+      content: "X";
+    }
+  }
+}
