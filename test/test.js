@@ -26,12 +26,11 @@ var tabs = new UnfinishedToggler({
 
 var nav = new UnfinishedToggler({
   root: '#nav',
-  groupSelector: 'li',
-  triggerSelector: '> li > a',
-  contentSelector: '.subnav',
-  event: 'click focus',
+  groupSelector: '.nav > li',
+  triggerSelector: '.nav > li > a',
   onClass: 'is-active',
-  outsideTurnsOff: true
+  outsideTurnsOff: true,
+  innerFocus: 'a'
 });
 
 var accordion = new UnfinishedToggler({
@@ -44,9 +43,7 @@ var accordion = new UnfinishedToggler({
   },
   onTrans: 300,
   offCallback: function(uft) {
-    setTimeout(function() {
-      uft.$group.find('.accordion-content').slideUp();
-    }, 300);
+    uft.$group.find('.accordion-content').slideUp();
   }
 });
 
@@ -55,5 +52,6 @@ var popup = new UnfinishedToggler({
   groupSelector: '.popup-g',
   onClass: 'popup-on',
   offClass: 'popup-off',
+  event: 'click focus',
   outsideTurnsOff: true
 }).turnAllOff();

@@ -208,7 +208,7 @@ function UnfinishedToggler(options) {
   }
 
   function nextOrPrev(dir) {
-    if (settings.onlyOneOn) {
+    if (!settings.onlyOneOn) {
       throw new Error('UnfinishedToggler cannot use next() and prev() without the setting {onlyOneOn: true}.');
     }
     var currentGroup = getOnItems().first().data('uft-group'),

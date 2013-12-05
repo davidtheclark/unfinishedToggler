@@ -5,7 +5,6 @@
 }
 
 .carousel-i {
-  background: gray;
   position: absolute;
   top: 0;
   left: 0;
@@ -36,6 +35,18 @@
   -ms-transform: translateX(-100%);
   transform: translateX(-100%);
   z-index: 3;
+}
+
+.carousel-i.m-1 {
+  background: gray;
+}
+
+.carousel-i.m-2 {
+  background: blue;
+}
+
+.carousel-i.m-3 {
+  background: red;
 }
 
 .carousel-btn {
@@ -247,12 +258,12 @@
 }
 
 .nav > li > .subnav {
-  display: none;
+  left: -9999px;
   z-index: -1;
 }
 
 .nav > li.is-active > .subnav {
-  display: block;
+  left: 0;
   z-index: 5;
 }
 
