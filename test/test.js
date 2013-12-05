@@ -1,3 +1,11 @@
+var modal = new UnfinishedToggler({
+  scattered: true,
+  triggerSelector: '.modal-trigger, .modal-container',
+  contentSelector: '.modal-content',
+  freezeScroll: true,
+  trans: 500
+});
+
 var carousel = new UnfinishedToggler({
   root: '#carousel',
   contentSelector: '.carousel-i',

@@ -57,10 +57,11 @@ function UnfinishedToggler(options) {
       }
     });
 
-    // INNER FOCUS
+    // Enabling innerFocus
     if (settings.innerFocus) {
       $root.find(settings.innerFocus).focus(innerFocus);
     }
+
   }
 
   function enable() {
@@ -131,6 +132,16 @@ function UnfinishedToggler(options) {
     }
   }
 
+  function freezeScrollOn() {
+    $('html').css({
+      overflow: 'hidden',
+      marginRight: '15px'
+    });
+  }
+  function freezeScrollOff() {
+    $('html').removeAttr('style');
+  }
+
   function turnOn($group) {
     var trans = (settings.onTrans) ? settings.onTrans : settings.trans;
 
@@ -150,6 +161,10 @@ function UnfinishedToggler(options) {
       actuallyTurnOn();
     }
 
+    if (settings.freezeScroll) {
+      freezeScrollOn();
+    }
+
     function actuallyTurnOn() {
       $group.addClass(transOnClass)
         .removeClass(offClass)
@@ -165,15 +180,20 @@ function UnfinishedToggler(options) {
   function turnOff($group, callback) {
     var cb = callback || function(){},
         trans = (settings.offTrans) ? settings.offTrans : settings.trans;
-    $group.addClass(transOffClass);
-    utils.optionalDelay(trans, function() {
-      cb();
-      $group.removeClass(transOffClass)
-        .removeClass(onClass)
-        .addClass(offClass);
-      settings.offCallback({ '$group': $group, 'action': 'off'});
-      onCount--;
-    });
+    if ($group.length > 0) {
+      $group.addClass(transOffClass);
+      utils.optionalDelay(trans, function() {
+        cb();
+        $group.removeClass(transOffClass)
+          .removeClass(onClass)
+          .addClass(offClass);
+        settings.offCallback({ '$group': $group, 'action': 'off'});
+        onCount--;
+      });
+      if (settings.freezeScroll) {
+        utils.optionalDelay(trans, freezeScrollOff);
+      }
+    }
   }
 
   function outsideTurnsOff($group, turningOn) {
@@ -324,5 +344,8 @@ UnfinishedToggler.prototype.defaults = {
   'outsideTurnsOff': false,
   // selectors for inner elements that will turn
   // on the group when they receive focus
-  'innerFocus': false
+  'innerFocus': false,
+  // freeze scrolling when a group is open
+  // (useful for modals)
+  'freezeScroll': false
 };
