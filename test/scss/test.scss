@@ -1,3 +1,10 @@
+@import "carousel";
 @import "tabs";
 @import "accordion";
 @import "navigation";
+@import "input";
+@import "popup";
+
+body {
+  padding-bottom: 20em;
+}

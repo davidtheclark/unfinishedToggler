@@ -45,11 +45,11 @@ $nav-i-y: 4em;
 // toggling business
 .nav > li {
   & > .subnav {
-    left: -9999px;
+    display: none;
     z-index: -1;
   }
   &.is-active > .subnav {
-    left: 0;
+    display: block;
     z-index: 5;
   }
 }

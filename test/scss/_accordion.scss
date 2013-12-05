@@ -26,9 +26,24 @@
   width: 300px;
 }
 
+.accordion-btns {
+  margin: 0;
+  padding: 0;
+  list-style-type: none;
+}
+.accordion-btn {
+  display: inline-block;
+  border: 1px solid;
+  padding: 0.5em 1em;
+  &.uft-on {
+    background: blue;
+    color: white;
+  }
+}
+
 // turned on
 
-.accordion-item.uft-on {
+.accordion-item.uft-on:not(.uft-on-trans) {
 
   .accordion-content {
     opacity: 1;

@@ -11,6 +11,33 @@
 
     <h1>Unfinished Toggler Tests</h1>
 
+    <h2>Carousel</h2>
+    <div id="carousel" class="carousel-c">
+      <section class="carousel-i uft-off" data-uft-group="1">
+        First Slide
+      </section>
+      <section class="carousel-i uft-off" data-uft-group="2">
+        Second Slide
+      </section>
+      <section class="carousel-i uft-off" data-uft-group="3">
+        Third Slide
+      </section>
+      <button id="carousel-next" class="carousel-btn m-next">next</button>
+      <button id="carousel-prev" class="carousel-btn m-prev">prev</button>
+      <ul class="carousel-trackers">
+        <li><button class="carousel-tracker" data-uft-group="1">1</button></li>
+        <li><button class="carousel-tracker" data-uft-group="2">2</button></li>
+        <li><button class="carousel-tracker" data-uft-group="3">3</button></li>
+      </ul>
+    </div>
+
+    <h2>Expanding Input</h2>
+    <div id="input">
+      <label class="test-input-label" for="test-input">Search</label>
+      <input id="test-input" type="text" placeholder="Type here">
+      <button>Submit</button>
+    </div>
+
     <h2>Navigation Dropdowns</h2>
 
     <ul id="nav" class="nav">
@@ -18,7 +45,7 @@
         <a href="#">Home</a>
       </li>
       <li>
-        <a href="#">About</a>
+        <a href="javascript:void(0)">About</a>
         <ul class="subnav">
           <li>
             <a href="#">The Person</a>
@@ -32,7 +59,7 @@
         </ul>
       </li>
       <li>
-        <a href="#">Work</a>
+        <a href="javascript:void(0)">Work</a>
         <ul class="subnav">
           <li>
             <a href="#">On People</a>
@@ -72,6 +99,11 @@
 
     <h2>Accordion</h2>
     <div id="accordion">
+      <ul class="accordion-btns">
+        <li class="uft-trigger accordion-btn" data-uft-group="11">house</li>
+        <li class="uft-trigger accordion-btn" data-uft-group="12">cow</li>
+        <li class="uft-trigger accordion-btn" data-uft-group="13">margin</li>
+      </ul>
       <div class="uft-group accordion-item" data-uft-group="11">
         <h3 id="triggerme" class="uft-trigger accordion-trigger" data-uft-group="11">
           <span class="inner-open">Read more about "House"</span>
@@ -112,16 +144,27 @@
           <p class="accordion-content-inner"><a href="#">Test anchor</a> The art that purports to control or forecast natural events, effects, or forces by invoking the supernatural.</p>
         </div>
       </div>
-      <ul>
-        <li class="uft-trigger" data-uft-group="11">house</li>
-        <li class="uft-trigger" data-uft-group="12">cow</li>
-        <li class="uft-trigger" data-uft-group="13">maginc</li>
-      </ul>
+    </div>
+
+    <h2>Popups</h2>
+    <div id="popups">
+      <div class="popup-g">
+        <button class="popup-t">Popup 1</button>
+        <div class="popup-c m-above">Lorem ipsum dolor sit amet, consectetuer adipiscing elit.</div>
+      </div>
+      <div class="popup-g">
+        <button class="popup-t">Popup 2</button>
+        <div class="popup-c m-below">Lorem ipsum dolor sit amet, consectetuer adipiscing elit.</div>
+      </div>
+      <div class="popup-g">
+        <button class="popup-t">Popup 3</button>
+        <div class="popup-c m-right">Lorem ipsum dolor sit amet, consectetuer adipiscing elit.</div>
+      </div>
     </div>
 
     <!--<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>-->
     <script src="jquery.js"></script>
-    <script src="../jquery.unfinishedToggler.js"></script>
+    <script src="../unfinishedToggler.js"></script>
     <script src="test.js"></script>
   </body>
 </html>

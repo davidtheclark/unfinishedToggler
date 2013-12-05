@@ -31,7 +31,14 @@
 }
 
 .tab-content {
+  opacity: 1;
+  transition: opacity 0.3s linear;
+  &.uft-on-trans,
+  &.uft-off-trans {
+    opacity: 0;
+  }
   &.uft-off {
+    opacity: 0;
     position: absolute;
     top: 0;
     left: 0;

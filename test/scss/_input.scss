@@ -1,0 +1,21 @@
+#test-input {
+  height: 2em;
+  padding: 0 1em;
+  width: 5em;
+
+  transition: width 0.3s linear;
+  .uft-on & {
+    width: 15em;
+  }
+}
+
+.test-input-label {
+  display: inline-block;
+  vertical-align: middle;
+  overflow: hidden;
+  width: 3em;
+  transition: width 0.3s linear;
+  .uft-on & {
+    width: 0;
+  }
+}

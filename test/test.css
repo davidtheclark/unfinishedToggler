@@ -1,3 +1,87 @@
+.carousel-c {
+  height: 20em;
+  position: relative;
+  overflow: hidden;
+}
+
+.carousel-i {
+  background: gray;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  font-size: 7em;
+  font-weight: bold;
+  -webkit-transition: -webkit-transform 0.5s linear;
+  transition: transform 0.5s linear;
+}
+
+.carousel-i.uft-off {
+  display: none;
+}
+
+.carousel-i.uft-on {
+  display: block;
+}
+
+.carousel-i.uft-on.uft-on-trans {
+  -webkit-transform: translateX(0);
+  -ms-transform: translateX(0);
+  transform: translateX(0);
+}
+
+.carousel-i.uft-on.uft-off-trans {
+  -webkit-transform: translateX(-100%);
+  -ms-transform: translateX(-100%);
+  transform: translateX(-100%);
+  z-index: 3;
+}
+
+.carousel-btn {
+  position: absolute;
+  bottom: 1em;
+  z-index: 10;
+}
+
+.carousel-btn.m-next {
+  right: 1em;
+}
+
+.carousel-btn.m-prev {
+  left: 1em;
+}
+
+.carousel-trackers {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  position: absolute;
+  bottom: 1em;
+  text-align: center;
+  left: 0;
+  right: 0;
+  z-index: 9;
+}
+
+.carousel-trackers > li {
+  display: inline-block;
+}
+
+.carousel-tracker {
+  background: black;
+  border: none;
+  color: white;
+  border-radius: 5px;
+  -webkit-transition: all 0.5s linear;
+  transition: all 0.5s linear;
+}
+
+.carousel-tracker:not(.uft-off-trans).uft-on {
+  background: white;
+  color: black;
+}
+
 .tab-triggers {
   cursor: pointer;
   list-style-type: none;
@@ -34,7 +118,19 @@
   overflow: hidden;
 }
 
+.tab-content {
+  opacity: 1;
+  -webkit-transition: opacity 0.3s linear;
+  transition: opacity 0.3s linear;
+}
+
+.tab-content.uft-on-trans,
+.tab-content.uft-off-trans {
+  opacity: 0;
+}
+
 .tab-content.uft-off {
+  opacity: 0;
   position: absolute;
   top: 0;
   left: 0;
@@ -69,19 +165,36 @@
   width: 300px;
 }
 
-.accordion-item.uft-on .accordion-content {
+.accordion-btns {
+  margin: 0;
+  padding: 0;
+  list-style-type: none;
+}
+
+.accordion-btn {
+  display: inline-block;
+  border: 1px solid;
+  padding: 0.5em 1em;
+}
+
+.accordion-btn.uft-on {
+  background: blue;
+  color: white;
+}
+
+.accordion-item.uft-on:not(.uft-on-trans) .accordion-content {
   opacity: 1;
 }
 
-.accordion-item.uft-on .accordion-trigger .inner-close {
+.accordion-item.uft-on:not(.uft-on-trans) .accordion-trigger .inner-close {
   display: block;
 }
 
-.accordion-item.uft-on .accordion-trigger .inner-open {
+.accordion-item.uft-on:not(.uft-on-trans) .accordion-trigger .inner-open {
   display: none;
 }
 
-.accordion-item.uft-on .accordion-trigger:before {
+.accordion-item.uft-on:not(.uft-on-trans) .accordion-trigger:before {
   content: "X";
 }
 
@@ -134,11 +247,119 @@
 }
 
 .nav > li > .subnav {
-  left: -9999px;
+  display: none;
   z-index: -1;
 }
 
 .nav > li.is-active > .subnav {
-  left: 0;
+  display: block;
   z-index: 5;
+}
+
+#test-input {
+  height: 2em;
+  padding: 0 1em;
+  width: 5em;
+  -webkit-transition: width 0.3s linear;
+  transition: width 0.3s linear;
+}
+
+.uft-on #test-input {
+  width: 15em;
+}
+
+.test-input-label {
+  display: inline-block;
+  vertical-align: middle;
+  overflow: hidden;
+  width: 3em;
+  -webkit-transition: width 0.3s linear;
+  transition: width 0.3s linear;
+}
+
+.uft-on .test-input-label {
+  width: 0;
+}
+
+.popup-g {
+  display: inline-block;
+  position: relative;
+}
+
+.popup-t {
+  background: blue;
+  color: white;
+  border: none;
+  -webkit-appearance: none;
+  padding: 0 2em;
+  height: 4em;
+  line-height: 4em;
+  font-size: 1em;
+}
+
+.popup-c {
+  background: gray;
+  color: white;
+  border-radius: 5px;
+  width: 20em;
+  padding: 1em;
+  position: absolute;
+}
+
+.popup-c:before {
+  content: "";
+  position: absolute;
+  width: 0;
+  height: 0;
+  border-style: solid;
+  border-width: 0.5em;
+}
+
+.popup-c.m-above {
+  bottom: 5em;
+  left: 50%;
+}
+
+.popup-c.m-above:before {
+  border-color: gray transparent transparent gray;
+  left: 0.3em;
+  bottom: -1em;
+}
+
+.popup-c.m-below {
+  top: 5em;
+  left: 50%;
+}
+
+.popup-c.m-below:before {
+  border-color: transparent transparent gray gray;
+  left: 0.3em;
+  top: -1em;
+}
+
+.popup-c.m-right {
+  right: -23em;
+  top: 0;
+}
+
+.popup-c.m-right:before {
+  border-width: 0.5em 1em 0.5em 0;
+  border-color: transparent gray transparent transparent;
+  left: -1em;
+  top: 50%;
+}
+
+.popup-off .popup-c {
+  border: 0;
+  clip: rect(0 0 0 0);
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  padding: 0;
+  position: absolute;
+  width: 1px;
+}
+
+body {
+  padding-bottom: 20em;
 }

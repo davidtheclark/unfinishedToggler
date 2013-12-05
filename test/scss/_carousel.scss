@@ -1,0 +1,70 @@
+.carousel-c {
+  height: 20em;
+  position: relative;
+  overflow: hidden;
+}
+
+.carousel-i {
+  background: gray;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  font-size: 7em;
+  font-weight: bold;
+
+  transition: transform 0.5s linear;
+  &.uft-off {
+    display: none;
+  }
+  &.uft-on {
+    display: block;
+    &.uft-on-trans {
+      transform: translateX(0);
+    }
+    &.uft-off-trans {
+      transform: translateX(-100%);
+      z-index: 3;
+    }
+  }
+}
+
+.carousel-btn {
+  position: absolute;
+  bottom: 1em;
+  z-index: 10;
+  &.m-next {
+    right: 1em;
+  }
+  &.m-prev {
+    left: 1em;
+  }
+}
+
+.carousel-trackers {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  & > li {
+    display: inline-block;
+  }
+  position: absolute;
+  bottom: 1em;
+  text-align: center;
+  left: 0;
+  right: 0;
+  z-index: 9;
+}
+
+.carousel-tracker {
+  background: black;
+  border: none;
+  color: white;
+  border-radius: 5px;
+  transition: all 0.5s linear;
+  &:not(.uft-off-trans).uft-on {
+    background: white;
+    color: black;
+  }
+}

@@ -1,40 +1,59 @@
+var carousel = new UnfinishedToggler({
+  root: '#carousel',
+  contentSelector: '.carousel-i',
+  triggerSelector: '.carousel-tracker',
+  nextSelector: '#carousel-next',
+  prevSelector: '#carousel-prev',
+  allOff: false,
+  scattered: true,
+  trans: 500
+});
+
+var input = new UnfinishedToggler({
+  triggerSelector: '#test-input',
+  groupSelector: '#input',
+  outsideTurnsOff: true
+});
+
 var tabs = new UnfinishedToggler({
   root: '#tabs',
   scattered: true,
-  allOff: false
+  allOff: false,
+  trans: 300,
+  overlap: false
 });
 
 
 var nav = new UnfinishedToggler({
   root: '#nav',
   groupSelector: 'li',
-  triggerSelector: 'li > a',
+  triggerSelector: '> li > a',
   contentSelector: '.subnav',
   event: 'click focus',
   onClass: 'is-active',
-  clickOutsideCloses: true
+  outsideTurnsOff: true
 });
 
 var accordion = new UnfinishedToggler({
   root: '#accordion',
-  onlyOneOn: false,
   scattered: true,
   contentSelector: '.uft-group',
   onCallback: function(uft) {
-    uft.$el.find('.accordion-content').slideDown();
-    $('html, body').animate({scrollTop: uft.$el.offset().top});
+    uft.$group.find('.accordion-content').slideDown();
+    $('html, body').animate({scrollTop: uft.$group.offset().top});
   },
-  onDelay: 300,
+  onTrans: 300,
   offCallback: function(uft) {
     setTimeout(function() {
-      uft.$el.find('.accordion-content').slideUp();
+      uft.$group.find('.accordion-content').slideUp();
     }, 300);
   }
 });
 
-
-var insider = new UnfinishedToggler({
-  root: '#insider',
-  groupSelector: '.insider-group',
-  triggerSelector: '.insider-trigger'
-});
+var popup = new UnfinishedToggler({
+  triggerSelector: '.popup-t',
+  groupSelector: '.popup-g',
+  onClass: 'popup-on',
+  offClass: 'popup-off',
+  outsideTurnsOff: true
+}).turnAllOff();

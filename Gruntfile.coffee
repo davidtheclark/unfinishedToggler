@@ -13,6 +13,11 @@ module.exports = (grunt) ->
         files:
           "test/test.css": "test/test.css"
 
+    uglify:
+      dist:
+        files:
+          "unfinishedToggler.min.js": "unfinishedToggler.js"
+
     connect:
       server:
         options:
@@ -33,6 +38,7 @@ module.exports = (grunt) ->
   grunt.loadNpmTasks "grunt-contrib-connect"
   grunt.loadNpmTasks "grunt-contrib-watch"
   grunt.loadNpmTasks "grunt-contrib-sass"
+  grunt.loadNpmTasks "grunt-contrib-uglify"
   grunt.loadNpmTasks "grunt-autoprefixer"
 
   grunt.registerTask "style", [
