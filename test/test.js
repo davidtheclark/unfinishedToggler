@@ -6,6 +6,13 @@ var modal = new UnfinishedToggler({
   trans: 500
 });
 
+// adding escape to close modal
+$(document).keyup(function(e) {
+  if (e.keyCode == 27 && modal.getOnItems().length > 0) {
+    modal.turnAllOff();
+  }
+});
+
 var carousel = new UnfinishedToggler({
   root: '#carousel',
   contentSelector: '.carousel-i',

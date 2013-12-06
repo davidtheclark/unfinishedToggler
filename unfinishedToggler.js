@@ -26,6 +26,7 @@ function UnfinishedToggler(options) {
     trigger: trigger,
     disable: disable,
     enable: enable,
+    getOnItems: getOnItems,
     turnAllOn: turnAllOn,
     turnAllOff: turnAllOff,
     next: next,
@@ -193,6 +194,8 @@ function UnfinishedToggler(options) {
       if (settings.freezeScroll) {
         utils.optionalDelay(trans, freezeScrollOff);
       }
+    } else {
+      cb();
     }
   }
 
