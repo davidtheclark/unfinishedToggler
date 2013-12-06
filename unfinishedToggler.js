@@ -38,16 +38,21 @@ function UnfinishedToggler(options) {
 
     enable();
 
-    if (settings.initial) {
-      // If there is an initial to turn on, do it.
-      trigger(settings.initial);
+    // Turn off all items.
+    if (settings.startOff) {
+      turnOff($items);
+    }
 
-    } else if (!settings.allOff && getOnItems().length === 0) {
-      // Otherwise, if no initial but allOff is not allowed
-      // and nothing is turned on in the markup ...
+    if (settings.initialTrigger && settings.initialTrigger !== 'first') {
+      // If there is an initialTrigger to trigger, do it.
+      // But if initialTrigger is 'first', pass it along.
+      trigger(settings.initialTrigger);
+    } else if ((!settings.allOff && getOnItems().length === 0) || settings.initialTrigger === 'first') {
+      // Otherwise, if no initialTrigger but allOff is not allowed
+      // and nothing is turned on in the markup,
+      // or initialTrigger is 'first',
       // trigger the first trigger with the first event.
-      $triggers.first()
-        .trigger(settings.event.split(' ')[0]);
+      $triggers.first().trigger(settings.event.split(' ')[0]);
     }
 
     // Create an array of relevant groups,
@@ -59,7 +64,7 @@ function UnfinishedToggler(options) {
       }
     });
 
-    // Enabling innerFocus
+    // Enable innerFocus.
     if (settings.innerFocus) {
       $root.find(settings.innerFocus).focus(innerFocus);
     }
@@ -77,8 +82,10 @@ function UnfinishedToggler(options) {
   }
 
   function disable() {
-    // Unbind triggers.
+    // Unbind triggers and next and prev.
     $triggers.off();
+    $(settings.nextSelector).off();
+    $(settings.prevSelector).off();
   }
 
   function getOnItems() {
@@ -128,7 +135,7 @@ function UnfinishedToggler(options) {
     } else if (settings.allOff || (!settings.allOff && onCount > 1)) {
       turnOff($group);
     }
-    // If outsideTurnsOff, make it happen.
+    // If outsideTurnsOff, enable it.
     if (settings.outsideTurnsOff) {
       outsideTurnsOff($group, turningOn);
     }
@@ -160,6 +167,7 @@ function UnfinishedToggler(options) {
         turnOff($onItems, actuallyTurnOn);
       }
     } else {
+      // If onlyOneOn is false, just turn $group on.
       actuallyTurnOn();
     }
 
@@ -171,8 +179,10 @@ function UnfinishedToggler(options) {
       $group.addClass(transOnClass)
         .removeClass(offClass)
         .addClass(onClass);
+      // Call user-defined callback, passing some data.
       settings.onCallback({ '$group': $group, 'action': 'on'});
       utils.optionalDelay(trans, function() {
+        // After the transition delay, remove the transition class.
         $group.removeClass(transOnClass);
       });
       onCount++;
@@ -183,12 +193,16 @@ function UnfinishedToggler(options) {
     var cb = callback || function(){},
         trans = (settings.offTrans) ? settings.offTrans : settings.trans;
     if ($group.length > 0) {
+      // First, add the transition class.
       $group.addClass(transOffClass);
       utils.optionalDelay(trans, function() {
         cb();
+        // Then remove it, and toggle on/off classes,
+        // after the transition delay.
         $group.removeClass(transOffClass)
           .removeClass(onClass)
           .addClass(offClass);
+        // Call user-defined callback, passing some data.
         settings.offCallback({ '$group': $group, 'action': 'off'});
         onCount--;
       });
@@ -196,6 +210,7 @@ function UnfinishedToggler(options) {
         utils.optionalDelay(trans, freezeScrollOff);
       }
     } else {
+      // If the group is empty, just call the callback.
       cb();
     }
   }
@@ -232,11 +247,18 @@ function UnfinishedToggler(options) {
   }
 
   function nextOrPrev(dir) {
+    // First, check that next() or prev() make sense with the setup.
     if (!settings.onlyOneOn) {
-      throw new Error('UnfinishedToggler cannot use next() and prev() without the setting {onlyOneOn: true}.');
+      throw new Error('UnfinishedToggler cannot use next() and prev() with the setting {onlyOneOn: false}.');
     }
-    var currentGroup = getOnItems().first().data('uft-group'),
-        firstGroup = Math.min.apply(Math, groupIds),
+    var currentGroup = getOnItems().first().data('uft-group');
+    if (typeof currentGroup === 'undefined') {
+      throw new Error('UnfinishedToggler cannot use next() and prev() unless data-uft-group values are defined.');
+    } else if (typeof currentGroup !== 'number') {
+      throw new Error('UnfinishedToggler cannot use next() and prev() unless data-uft-group values are integers.');
+    }
+
+    var firstGroup = Math.min.apply(Math, groupIds),
         lastGroup = Math.max.apply(Math, groupIds),
         targetGroup;
     if (dir === 'next') {
@@ -328,8 +350,10 @@ UnfinishedToggler.prototype.defaults = {
   'onlyOneOn' : true,
   // all items can be off at the same time
   'allOff' : true,
+  // start by turning off all items
+  'startOff': true,
   // a selector for an initially-triggered trigger
-  'initial' : false,
+  'initialTrigger' : false,
   // the event(s) that triggers a change
   'event' : 'click',
   // a callback to perform when turning on
