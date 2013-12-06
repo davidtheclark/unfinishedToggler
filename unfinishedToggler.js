@@ -8,6 +8,7 @@ function UnfinishedToggler(options) {
       transOnClass = onClass + '-trans',
       transOffClass = offClass + '-trans',
       $triggers = $root.find(settings.triggerSelector),
+      $contents = $root.find(settings.contentSelector),
       groupIds = [],
       utils = this.utils,
       // onCount should indicate the number of groups
@@ -17,7 +18,7 @@ function UnfinishedToggler(options) {
       // be toggled. If `scattered` is false, $items only
       // include the containing items; if `scattered` is
       // true, items include triggers and contents.
-      $items = (!settings.scattered) ? $root.find(settings.groupSelector) : $triggers.add(settings.contentSelector);
+      $items = (!settings.scattered) ? $root.find(settings.groupSelector) : $triggers.add($contents);
 
   init();
 
@@ -340,6 +341,7 @@ UnfinishedToggler.prototype.defaults = {
   // transition time when turning off
   'offTrans': 0,
   // transition time when turning both on and off
+  // (used INSTEAD OF onTrans and offTrans)
   'trans': 0,
   // transition on and off state overlap
   'overlap': true,

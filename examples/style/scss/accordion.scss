@@ -23,3 +23,10 @@
   position: absolute;
   width: 1px;
 }
+
+.accordion-complex-content {
+  display: none;
+  &.uft-on {
+    display: block;
+  }
+}
