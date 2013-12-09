@@ -20,6 +20,7 @@ var carousel = UnfinishedToggler({
   nextSelector: '#carousel-next',
   prevSelector: '#carousel-prev',
   allOff: false,
+  startOff: false,
   scattered: true,
   trans: 500
 });
@@ -34,6 +35,7 @@ var tabs = UnfinishedToggler({
   root: '#tabs',
   scattered: true,
   allOff: false,
+  startOff: false,
   trans: 300,
   overlap: false
 });

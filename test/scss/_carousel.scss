@@ -14,9 +14,7 @@
   font-weight: bold;
 
   transition: transform 0.5s linear;
-  &.uft-off {
-    display: none;
-  }
+  display: none;
   &.uft-on {
     display: block;
     &.uft-on-trans {
