@@ -4,6 +4,8 @@ module.exports = (grunt) ->
     pkg: grunt.file.readJSON "package.json"
 
     sass:
+      options:
+        style: "expanded"
       examples:
         files: [
           expand: true
@@ -33,6 +35,18 @@ module.exports = (grunt) ->
         files:
           "unfinishedToggler.min.js": "unfinishedToggler.js"
 
+    assemble:
+      examples:
+        options:
+          layout: "examples/templates/layouts/default.hbs"
+          partials: "examples/templates/partials/*.hbs"
+        files: [
+          expand: true
+          cwd: "examples/templates/pages/"
+          src: ["**/*.hbs"]
+          dest: "examples/"
+        ]
+
     connect:
       server:
         options:
@@ -52,6 +66,9 @@ module.exports = (grunt) ->
       examplesSass:
         files: ["examples/style/scss/*.scss"]
         tasks: ["styleExamples"]
+      examplesAssemble:
+        files: ["examples/templates/**/*.hbs"]
+        tasks: ["newer:assemble:examples"]
       testSass:
         files: ["test/scss/*.scss"]
         tasks: ["styleTest"]
@@ -62,6 +79,7 @@ module.exports = (grunt) ->
   grunt.loadNpmTasks "grunt-contrib-uglify"
   grunt.loadNpmTasks "grunt-autoprefixer"
   grunt.loadNpmTasks "grunt-newer"
+  grunt.loadNpmTasks "assemble"
 
   grunt.registerTask "styleExamples", [
     "newer:sass:examples"

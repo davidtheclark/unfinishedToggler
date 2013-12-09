@@ -22,7 +22,7 @@ function UnfinishedToggler(options) {
     // all items can be off at the same time
     'allOff' : true,
     // start by turning off all items
-    'startOff': true,
+    'startOff': false,
     // a selector for an initially-triggered trigger
     'initialTrigger' : false,
     // the event(s) that triggers a change
