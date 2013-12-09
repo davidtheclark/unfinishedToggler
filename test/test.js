@@ -1,4 +1,4 @@
-var modal = new UnfinishedToggler({
+var modal = UnfinishedToggler({
   scattered: true,
   triggerSelector: '.modal-trigger, .modal-container',
   contentSelector: '.modal-content',
@@ -13,7 +13,7 @@ $(document).keyup(function(e) {
   }
 });
 
-var carousel = new UnfinishedToggler({
+var carousel = UnfinishedToggler({
   root: '#carousel',
   contentSelector: '.carousel-i',
   triggerSelector: '.carousel-tracker',
@@ -24,13 +24,13 @@ var carousel = new UnfinishedToggler({
   trans: 500
 });
 
-var input = new UnfinishedToggler({
+var input = UnfinishedToggler({
   triggerSelector: '#test-input',
   groupSelector: '#input',
   outsideTurnsOff: true
 });
 
-var tabs = new UnfinishedToggler({
+var tabs = UnfinishedToggler({
   root: '#tabs',
   scattered: true,
   allOff: false,
@@ -39,7 +39,7 @@ var tabs = new UnfinishedToggler({
 });
 
 
-var nav = new UnfinishedToggler({
+var nav = UnfinishedToggler({
   root: '#nav',
   groupSelector: '.nav > li',
   triggerSelector: '.nav > li > a',
@@ -48,7 +48,7 @@ var nav = new UnfinishedToggler({
   innerFocus: 'a'
 });
 
-var accordion = new UnfinishedToggler({
+var accordion = UnfinishedToggler({
   root: '#accordion',
   scattered: true,
   contentSelector: '.uft-group',

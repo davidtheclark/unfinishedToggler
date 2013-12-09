@@ -69,6 +69,8 @@ function UnfinishedToggler(options) {
       // true, items include triggers and contents.
       $items = (!settings.scattered) ? $root.find(settings.groupSelector) : $triggers.add($contents);
 
+  // Utils are generic functions required by but not
+  // specific to UFT.
   var utils = {
     simpleDebounce: function(func) {
       // Basically taken from Underscore and simplified.
@@ -87,13 +89,11 @@ function UnfinishedToggler(options) {
             result = func.apply(context, args);
           }
         };
-        if (!timeout) {
+        if (!timeout)
           timeout = setTimeout(later, wait);
-        }
         return result;
       };
     },
-
     optionalDelay: function(delay, func) {
       if (delay > 0)
         window.setTimeout(func, delay);
@@ -121,9 +121,8 @@ function UnfinishedToggler(options) {
     enable();
 
     // Turn off all items.
-    if (settings.startOff) {
+    if (settings.startOff)
       turnOff($items);
-    }
 
     if (settings.initialTrigger && settings.initialTrigger !== 'first') {
       // If there is an initialTrigger to trigger, do it.
@@ -147,9 +146,8 @@ function UnfinishedToggler(options) {
     });
 
     // Enable innerFocus.
-    if (settings.innerFocus) {
+    if (settings.innerFocus)
       $root.find(settings.innerFocus).focus(innerFocus);
-    }
 
   }
 
@@ -181,12 +179,20 @@ function UnfinishedToggler(options) {
   }
 
   function innerFocus(e) {
+    // Find the focus-target's group, and trigger it.
     var $el = $(e.target),
         $groupPart = (!settings.scattered) ? $el : $el.closest(settings.contentSelector),
         groupIsOn = isOn(getGroup($groupPart));
-    if (!groupIsOn) {
+    if (!groupIsOn)
       trigger($groupPart);
-    }
+  }
+
+  function freezeScrollOn() {
+    $('html').css({ overflow: 'hidden' });
+  }
+
+  function freezeScrollOff() {
+    $('html').removeAttr('style');
   }
 
   function getGroupById(id) {
@@ -218,19 +224,8 @@ function UnfinishedToggler(options) {
       turnOff($group);
     }
     // If outsideTurnsOff, enable it.
-    if (settings.outsideTurnsOff) {
+    if (settings.outsideTurnsOff)
       outsideTurnsOff($group, turningOn);
-    }
-  }
-
-  function freezeScrollOn() {
-    $('html').css({
-      overflow: 'hidden',
-      marginRight: '15px'
-    });
-  }
-  function freezeScrollOff() {
-    $('html').removeAttr('style');
   }
 
   function turnOn($group) {
@@ -253,9 +248,8 @@ function UnfinishedToggler(options) {
       actuallyTurnOn();
     }
 
-    if (settings.freezeScroll) {
+    if (settings.freezeScroll)
       freezeScrollOn();
-    }
 
     function actuallyTurnOn() {
       $group.addClass(transOnClass)
@@ -288,9 +282,8 @@ function UnfinishedToggler(options) {
         settings.offCallback({ '$group': $group, 'action': 'off'});
         onCount--;
       });
-      if (settings.freezeScroll) {
+      if (settings.freezeScroll)
         utils.optionalDelay(trans, freezeScrollOff);
-      }
     } else {
       // If the group is empty, just call the callback.
       cb();
@@ -330,9 +323,8 @@ function UnfinishedToggler(options) {
 
   function nextOrPrev(dir) {
     // First, check that next() or prev() make sense with the setup.
-    if (!settings.onlyOneOn) {
+    if (!settings.onlyOneOn)
       throw new Error('UnfinishedToggler cannot use next() and prev() with the setting {onlyOneOn: false}.');
-    }
     var currentGroup = getOnItems().first().data('uft-group');
     if (typeof currentGroup === 'undefined') {
       throw new Error('UnfinishedToggler cannot use next() and prev() unless data-uft-group values are defined.');
