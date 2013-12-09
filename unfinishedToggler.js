@@ -1,7 +1,57 @@
 function UnfinishedToggler(options) {
 
+  var defaults = {
+    // an context-element containing all the others,
+    // within which to find the toggler's parts
+    'root': 'body',
+    'onClass': 'uft-on',
+    'offClass': 'uft-off',
+    'groupSelector': '.uft-group',
+    'triggerSelector': '.uft-trigger',
+    'contentSelector': '.uft-content',
+    // selector for a "next" trigger
+    'nextSelector': false,
+    // selector for a "prev" trigger
+    'prevSelector': false,
+    // scattered is true if the triggers and content
+    // are not children of group-elements. scattered groups
+    // are identified by data-uft-group attributes.
+    'scattered': false,
+    // only allow one item to be on at a time
+    'onlyOneOn' : true,
+    // all items can be off at the same time
+    'allOff' : true,
+    // start by turning off all items
+    'startOff': true,
+    // a selector for an initially-triggered trigger
+    'initialTrigger' : false,
+    // the event(s) that triggers a change
+    'event' : 'click',
+    // a callback to perform when turning on
+    'onCallback': function(){},
+    // a callback to perform when turning off
+    'offCallback': function(){},
+    // transition time when turning on
+    'onTrans': 0,
+    // transition time when turning off
+    'offTrans': 0,
+    // transition time when turning both on and off
+    // (used INSTEAD OF onTrans and offTrans)
+    'trans': 0,
+    // transition on and off state overlap
+    'overlap': true,
+    // a click outside of the group turns it off
+    'outsideTurnsOff': false,
+    // selectors for inner elements that will turn
+    // on the group when they receive focus
+    'innerFocus': false,
+    // freeze scrolling when a group is open
+    // (useful for modals)
+    'freezeScroll': false
+  };
+
   // Establish variables and run init.
-  var settings = $.extend({}, this.defaults, options),
+  var settings = $.extend({}, defaults, options),
       $root = $(settings.root),
       onClass = settings.onClass,
       offClass = settings.offClass,
@@ -10,7 +60,6 @@ function UnfinishedToggler(options) {
       $triggers = $root.find(settings.triggerSelector),
       $contents = $root.find(settings.contentSelector),
       groupIds = [],
-      utils = this.utils,
       // onCount should indicate the number of groups
       // currently turned on.
       onCount = 0,
@@ -19,6 +68,39 @@ function UnfinishedToggler(options) {
       // include the containing items; if `scattered` is
       // true, items include triggers and contents.
       $items = (!settings.scattered) ? $root.find(settings.groupSelector) : $triggers.add($contents);
+
+  var utils = {
+    simpleDebounce: function(func) {
+      // Basically taken from Underscore and simplified.
+      var timeout, args, context, timestamp, result;
+      var wait = 200;
+      return function() {
+        context = this;
+        args = arguments;
+        timestamp = new Date();
+        var later = function() {
+          var last = (new Date()) - timestamp;
+          if (last < wait) {
+            timeout = setTimeout(later, wait - last);
+          } else {
+            timeout = null;
+            result = func.apply(context, args);
+          }
+        };
+        if (!timeout) {
+          timeout = setTimeout(later, wait);
+        }
+        return result;
+      };
+    },
+
+    optionalDelay: function(delay, func) {
+      if (delay > 0)
+        window.setTimeout(func, delay);
+      else
+        func();
+    }
+  };
 
   init();
 
@@ -291,90 +373,5 @@ function UnfinishedToggler(options) {
       throw new Error('UnfinishedToggler will not turnAllOff with the setting {allOff: true}.');
     }
   }
+
 }
-
-// Generic utilities needed by the plugin
-UnfinishedToggler.prototype.utils = {
-
-  simpleDebounce: function(func) {
-    // Basically taken from Underscore and simplified.
-    var timeout, args, context, timestamp, result;
-    var wait = 200;
-    return function() {
-      context = this;
-      args = arguments;
-      timestamp = new Date();
-      var later = function() {
-        var last = (new Date()) - timestamp;
-        if (last < wait) {
-          timeout = setTimeout(later, wait - last);
-        } else {
-          timeout = null;
-          result = func.apply(context, args);
-        }
-      };
-      if (!timeout) {
-        timeout = setTimeout(later, wait);
-      }
-      return result;
-    };
-  },
-
-  optionalDelay: function(delay, func) {
-    if (delay > 0)
-      window.setTimeout(func, delay);
-    else
-      func();
-  }
-
-};
-
-UnfinishedToggler.prototype.defaults = {
-  // an context-element containing all the others,
-  // within which to find the toggler's parts
-  'root': 'body',
-  'onClass': 'uft-on',
-  'offClass': 'uft-off',
-  'groupSelector': '.uft-group',
-  'triggerSelector': '.uft-trigger',
-  'contentSelector': '.uft-content',
-  // selector for a "next" trigger
-  'nextSelector': false,
-  // selector for a "prev" trigger
-  'prevSelector': false,
-  // scattered is true if the triggers and content
-  // are not children of group-elements. scattered groups
-  // are identified by data-uft-group attributes.
-  'scattered': false,
-  // only allow one item to be on at a time
-  'onlyOneOn' : true,
-  // all items can be off at the same time
-  'allOff' : true,
-  // start by turning off all items
-  'startOff': true,
-  // a selector for an initially-triggered trigger
-  'initialTrigger' : false,
-  // the event(s) that triggers a change
-  'event' : 'click',
-  // a callback to perform when turning on
-  'onCallback': function(){},
-  // a callback to perform when turning off
-  'offCallback': function(){},
-  // transition time when turning on
-  'onTrans': 0,
-  // transition time when turning off
-  'offTrans': 0,
-  // transition time when turning both on and off
-  // (used INSTEAD OF onTrans and offTrans)
-  'trans': 0,
-  // transition on and off state overlap
-  'overlap': true,
-  // a click outside of the group turns it off
-  'outsideTurnsOff': false,
-  // selectors for inner elements that will turn
-  // on the group when they receive focus
-  'innerFocus': false,
-  // freeze scrolling when a group is open
-  // (useful for modals)
-  'freezeScroll': false
-};
