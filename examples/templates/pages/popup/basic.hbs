@@ -1,0 +1,21 @@
+---
+title: Basic Popup
+filetitle: popup-basic
+category: popup
+---
+
+<div id="popup">
+  <div class="popup-group uft-group uft-off">
+    <button class="popup-trigger uft-trigger">Toggle Popup</button>
+    <div class="popup-content">
+      Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa.
+    </div>
+  </div>
+</div>
+
+<script>
+  var popup = UnfinishedToggler({
+    root: '#popup',
+    outsideTurnsOff: true
+  });
+</script>

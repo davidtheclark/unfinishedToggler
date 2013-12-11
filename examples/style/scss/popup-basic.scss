@@ -1,0 +1,49 @@
+@import "base";
+
+
+@mixin uft-popup (
+  $width: 15em,
+  $background: #eee,
+  $content: ".popup-content",
+  $group: ".popup-group",
+  $onClass: ".uft-on",
+  $offClass: ".uft-off",
+  $efface: true
+) {
+
+  @include uft-basic-grouped($content, $group, $onClass, $offClass, $efface);
+
+  #{$group} {
+    display: inline-block;
+    position: relative;
+  }
+  #{$content} {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    z-index: 10;
+    width: $width;
+    background: $background;
+
+    // triangle above
+    $popup-triangle-y: 0.75em;
+    margin-top: $popup-triangle-y;
+    &:before {
+      content: "";
+      border-width: $popup-triangle-y;
+      border-style: solid;
+      border-color: transparent;
+      border-bottom-color: $background;
+      position: absolute;
+      top: -($popup-triangle-y * 2);
+      left: 1em;
+    }
+  }
+
+}
+
+@include uft-popup;
+
+.popup-content {
+  padding: 0.75em 1em;
+}

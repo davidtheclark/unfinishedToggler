@@ -1,22 +1,3 @@
 @import "base";
 
-@mixin uft-accordion-basic (
-  $trigger: ".accordion-trigger",
-  $content: ".accordion-content",
-  $group: ".accordion-group",
-  $onClass: ".uft-on",
-  $offClass: ".uft-off",
-  $efface: false
-) {
-
-  #{$group}#{$offClass} #{$content} {
-    @if $efface {
-      display: none;
-    } @else {
-      @include hide-visually;
-    }
-  }
-
-}
-
-@include uft-accordion-basic($efface: false);
+@include uft-accordion-grouped($efface: false);

@@ -1,0 +1,33 @@
+.popup-group.uft-off .popup-content {
+  display: none;
+}
+
+.popup-group {
+  display: inline-block;
+  position: relative;
+}
+
+.popup-content {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  z-index: 10;
+  width: 15em;
+  background: #eeeeee;
+  margin-top: 0.75em;
+}
+
+.popup-content:before {
+  content: "";
+  border-width: 0.75em;
+  border-style: solid;
+  border-color: transparent;
+  border-bottom-color: #eeeeee;
+  position: absolute;
+  top: -1.5em;
+  left: 1em;
+}
+
+.popup-content {
+  padding: 0.75em 1em;
+}

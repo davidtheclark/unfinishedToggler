@@ -22,9 +22,9 @@ module.exports = (grunt) ->
       examples:
         files: [
           expand: true
-          cwd: "examples/style/css"
+          cwd: "examples/style/css/"
           src: ["*.css"]
-          dest: "examples/style/css"
+          dest: "examples/style/css/"
         ]
       test:
         files:
@@ -58,13 +58,16 @@ module.exports = (grunt) ->
         options:
           livereload: true
         files: [
-          "examples/*.html"
+          "examples/**/*.html"
           "examples/style/css/*.css"
           "examples/js/*.js"
           "test/*.{html,css,js}"
         ]
       examplesSass:
-        files: ["examples/style/scss/*.scss"]
+        files: [
+          "scss/*.scss"
+          "examples/style/scss/*.scss"
+        ]
         tasks: ["styleExamples"]
       examplesAssemble:
         files: ["examples/templates/**/*.hbs"]
@@ -83,7 +86,7 @@ module.exports = (grunt) ->
 
   grunt.registerTask "styleExamples", [
     "newer:sass:examples"
-    "newer:autoprefixer:examples"
+    "autoprefixer:examples"
   ]
   grunt.registerTask "styleTest", [
     "newer:sass:test"

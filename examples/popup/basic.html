@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Basic Popup | unfinishedToggler examples</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="../style/css/normalize.css">
+
+    
+    <link rel="stylesheet" href="../style/css/popup-basic.css">
+    
+
+    <!-- scripts loaded in head so example-specific scripts can be in template -->
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+    <script src="../../unfinishedToggler.js"></script>
+  </head>
+  <body>
+
+    <h1>UFT Basic Popup</h1>
+
+    
+
+<div id="popup">
+  <div class="popup-group uft-group uft-off">
+    <button class="popup-trigger uft-trigger">Toggle Popup</button>
+    <div class="popup-content">
+      Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa.
+    </div>
+  </div>
+</div>
+
+<script>
+  var popup = UnfinishedToggler({
+    root: '#popup',
+    outsideTurnsOff: true
+  });
+</script>
+
+  </body>
+</html>

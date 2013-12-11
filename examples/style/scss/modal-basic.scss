@@ -1,0 +1,33 @@
+@import "base";
+
+@include uft-modal;
+
+.modal-container {
+  transition-property: opacity;
+  transition-duration: 0.3s;
+  transition-timing-function: linear;
+  &.uft-on {
+    opacity: 1;
+  }
+  &.uft-on-trans,
+  &.uft-off-trans,
+  &.uft-off {
+    opacity: 0;
+  }
+}
+
+.modal-content {
+  transition-property: opacity transform;
+  transition-duration: 0.3s;
+  transition-timing-function: linear;
+  &.uft-on {
+    transform: scale(1);
+    opacity: 1;
+  }
+  &.uft-on-trans,
+  &.uft-off-trans,
+  &.uft-off {
+    transform: scale(1.2);
+    opacity: 0;
+  }
+}
