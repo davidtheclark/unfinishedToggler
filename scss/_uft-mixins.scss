@@ -57,7 +57,8 @@
 @mixin uft-modal (
   $container: ".modal-container",
   $content: ".modal-content",
-  $onClass: ".uft-on"
+  $offClass: ".uft-off",
+  $efface: true
 ) {
 
   #{$container} {
@@ -67,9 +68,13 @@
     right: 0;
     bottom: 0;
     left: 0;
-    z-index: -1000;
-    &#{$onClass} {
-      z-index: 1000;
+    z-index: 1000;
+    &#{$offClass} {
+      @if $efface {
+        display: none;
+      } @else {
+        @include hide-visually;
+      }
     }
     // center popup, both ways
     text-align: center;

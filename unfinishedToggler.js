@@ -1,57 +1,57 @@
+var uftDefaults = {
+  // an context-element containing all the others,
+  // within which to find the toggler's parts
+  'root': 'body',
+  'onClass': 'uft-on',
+  'offClass': 'uft-off',
+  'groupSelector': '.uft-group',
+  'triggerSelector': '.uft-trigger',
+  'contentSelector': '.uft-content',
+  // selector for a "next" trigger
+  'nextSelector': false,
+  // selector for a "prev" trigger
+  'prevSelector': false,
+  // scattered is true if the triggers and content
+  // are not children of group-elements. scattered groups
+  // are identified by data-uft-group attributes.
+  'scattered': false,
+  // only allow one item to be on at a time
+  'onlyOneOn' : true,
+  // all items can be off at the same time
+  'allOff' : true,
+  // start by turning off all items
+  'startOff': false,
+  // a selector for an initially-triggered trigger
+  'initialTrigger' : false,
+  // the event(s) that triggers a change
+  'event' : 'click',
+  // a callback to perform when turning on
+  'onCallback': function(){},
+  // a callback to perform when turning off
+  'offCallback': function(){},
+  // transition time when turning on
+  'onTrans': 0,
+  // transition time when turning off
+  'offTrans': 0,
+  // transition time when turning both on and off
+  // (used INSTEAD OF onTrans and offTrans)
+  'trans': 0,
+  // transition on and off state overlap
+  'overlap': true,
+  // a click outside of the group turns it off
+  'outsideTurnsOff': false,
+  // selectors for inner elements that will turn
+  // on the group when they receive focus
+  'innerFocus': false,
+  // freeze scrolling when a group is open
+  // (useful for modals)
+  'freezeScroll': false
+};
+
 function UnfinishedToggler(options) {
 
-  var defaults = {
-    // an context-element containing all the others,
-    // within which to find the toggler's parts
-    'root': 'body',
-    'onClass': 'uft-on',
-    'offClass': 'uft-off',
-    'groupSelector': '.uft-group',
-    'triggerSelector': '.uft-trigger',
-    'contentSelector': '.uft-content',
-    // selector for a "next" trigger
-    'nextSelector': false,
-    // selector for a "prev" trigger
-    'prevSelector': false,
-    // scattered is true if the triggers and content
-    // are not children of group-elements. scattered groups
-    // are identified by data-uft-group attributes.
-    'scattered': false,
-    // only allow one item to be on at a time
-    'onlyOneOn' : true,
-    // all items can be off at the same time
-    'allOff' : true,
-    // start by turning off all items
-    'startOff': false,
-    // a selector for an initially-triggered trigger
-    'initialTrigger' : false,
-    // the event(s) that triggers a change
-    'event' : 'click',
-    // a callback to perform when turning on
-    'onCallback': function(){},
-    // a callback to perform when turning off
-    'offCallback': function(){},
-    // transition time when turning on
-    'onTrans': 0,
-    // transition time when turning off
-    'offTrans': 0,
-    // transition time when turning both on and off
-    // (used INSTEAD OF onTrans and offTrans)
-    'trans': 0,
-    // transition on and off state overlap
-    'overlap': true,
-    // a click outside of the group turns it off
-    'outsideTurnsOff': false,
-    // selectors for inner elements that will turn
-    // on the group when they receive focus
-    'innerFocus': false,
-    // freeze scrolling when a group is open
-    // (useful for modals)
-    'freezeScroll': false
-  };
-
   // Establish variables and run init.
-  var settings = $.extend({}, defaults, options),
+  var settings = $.extend({}, uftDefaults, options),
       $root = $(settings.root),
       onClass = settings.onClass,
       offClass = settings.offClass,
@@ -157,8 +157,14 @@ function UnfinishedToggler(options) {
       trigger(this);
     }));
     // Bind next and prev, if they exist.
-    $(settings.nextSelector).click(next);
-    $(settings.prevSelector).click(prev);
+    $(settings.nextSelector).click(function(e) {
+      e.preventDefault();
+      next();
+    });
+    $(settings.prevSelector).click(function(e) {
+      e.preventDefault();
+      prev();
+    });
   }
 
   function disable() {
