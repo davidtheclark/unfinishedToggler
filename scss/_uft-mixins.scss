@@ -1,12 +1,12 @@
 @mixin uft-basic-grouped (
   $content: ".uft-content",
   $group: ".uft-group",
-  $onClass: ".uft-on",
-  $offClass: ".uft-off",
+  $offClass: "uft-off",
+  $onClass: "uft-on",
   $efface: false
 ) {
 
-  #{$group}#{$offClass} #{$content} {
+  #{$group}.#{$offClass} #{$content} {
     @if $efface {
       display: none;
     } @else {
@@ -18,11 +18,11 @@
 
 @mixin uft-basic-scattered (
   $content: ".uft-content",
-  $onClass: ".uft-on",
-  $offClass: ".uft-off",
+  $offClass: "uft-off",
+  $onClass: "uft-on",
   $efface: false
 ) {
-  #{$content}#{$offClass} {
+  #{$content}.#{$offClass} {
     @if $efface {
       display: none;
     } @else {
@@ -31,33 +31,10 @@
   }
 }
 
-@mixin uft-accordion-grouped (
-  $content: ".accordion-content",
-  $group: ".accordion-group",
-  $onClass: ".uft-on",
-  $offClass: ".uft-off",
-  $efface: false
-) {
-
-  @include uft-basic-grouped ($content, $group, $onClass, $offClass, $efface);
-
-}
-
-@mixin uft-accordion-scattered (
-  $content: ".accordion-content",
-  $onClass: ".uft-on",
-  $offClass: ".uft-off",
-  $efface: false
-) {
-
-  @include uft-basic-scattered ($content, $onClass, $offClass, $efface);
-
-}
-
 @mixin uft-modal (
   $container: ".modal-container",
   $content: ".modal-content",
-  $offClass: ".uft-off",
+  $offClass: "uft-off",
   $efface: true
 ) {
 
@@ -69,7 +46,7 @@
     bottom: 0;
     left: 0;
     z-index: 1000;
-    &#{$offClass} {
+    &.#{$offClass} {
       @if $efface {
         display: none;
       } @else {
@@ -100,6 +77,48 @@
     overflow: auto;
     @media only screen and (max-width: 39em) {
       width: 90%;
+    }
+  }
+
+}
+
+
+@mixin uft-popup (
+  $width: 15em,
+  $background: #eee,
+  $content: ".popup-content",
+  $group: ".popup-group",
+  $onClass: "uft-on",
+  $offClass: "uft-off",
+  $triangle: 0.75em,
+  $efface: true
+) {
+
+  @include uft-basic-grouped($content, $group, $offClass, $onClass, $efface);
+
+  #{$group} {
+    display: inline-block;
+    position: relative;
+  }
+  #{$content} {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    z-index: 10;
+    width: $width;
+    background: $background;
+
+    // triangle above
+    margin-top: $triangle;
+    &:before {
+      content: "";
+      border-width: $triangle;
+      border-style: solid;
+      border-color: transparent;
+      border-bottom-color: $background;
+      position: absolute;
+      top: -($triangle * 2);
+      left: 1em;
     }
   }
 

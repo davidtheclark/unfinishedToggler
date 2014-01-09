@@ -3,7 +3,8 @@ var modal = UnfinishedToggler({
   triggerSelector: '.modal-trigger, .modal-container',
   contentSelector: '.modal-content',
   freezeScroll: true,
-  trans: 500
+  onTrans: 40,
+  offTrans: 500
 });
 
 // adding escape to close modal

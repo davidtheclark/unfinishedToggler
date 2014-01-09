@@ -1,5 +1,5 @@
 var uftDefaults = {
-  // an context-element containing all the others,
+  // selector for a context-element containing all the others,
   // within which to find the toggler's parts
   'root': 'body',
   'onClass': 'uft-on',
@@ -21,7 +21,7 @@ var uftDefaults = {
   'allOff' : true,
   // start by turning off all items
   'startOff': false,
-  // a selector for an initially-triggered trigger
+  // a selector for a trigger to trigger right away
   'initialTrigger' : false,
   // the event(s) that triggers a change
   'event' : 'click',
@@ -36,7 +36,7 @@ var uftDefaults = {
   // transition time when turning both on and off
   // (used INSTEAD OF onTrans and offTrans)
   'trans': 0,
-  // transition on and off state overlap
+  // transition on and off state will overlap
   'overlap': true,
   // a click outside of the group turns it off
   'outsideTurnsOff': false,
@@ -69,8 +69,7 @@ function UnfinishedToggler(options) {
       // true, items include triggers and contents.
       $items = (!settings.scattered) ? $root.find(settings.groupSelector) : $triggers.add($contents);
 
-  // Utils are generic functions required by but not
-  // specific to UFT.
+  // Utils are generic functions required by but not specific to UFT.
   var utils = {
     simpleDebounce: function(func) {
       // Basically taken from Underscore and simplified.
@@ -102,6 +101,7 @@ function UnfinishedToggler(options) {
     }
   };
 
+  // Start the whole thing.
   init();
 
   // Return public methods.
@@ -120,7 +120,7 @@ function UnfinishedToggler(options) {
 
     enable();
 
-    // Turn off all items.
+    // Turn off all items, if settings say to do that.
     if (settings.startOff)
       turnOff($items);
 
@@ -136,7 +136,7 @@ function UnfinishedToggler(options) {
       $triggers.first().trigger(settings.event.split(' ')[0]);
     }
 
-    // Create an array of relevant groups,
+    // Fill up an array of relevant groups,
     // used for next() and prev().
     $items.each(function() {
       var thisGroupId = $(this).data('uft-group');
@@ -145,7 +145,7 @@ function UnfinishedToggler(options) {
       }
     });
 
-    // Enable innerFocus.
+    // Enable innerFocus, if settings say to do that.
     if (settings.innerFocus)
       $root.find(settings.innerFocus).focus(innerFocus);
 
@@ -157,21 +157,27 @@ function UnfinishedToggler(options) {
       trigger(this);
     }));
     // Bind next and prev, if they exist.
-    $(settings.nextSelector).click(function(e) {
-      e.preventDefault();
-      next();
-    });
-    $(settings.prevSelector).click(function(e) {
-      e.preventDefault();
-      prev();
-    });
+    if (settings.nextSelector) {
+      $(settings.nextSelector).click(function(e) {
+        e.preventDefault();
+        next();
+      });
+    }
+    if (settings.prevSelector) {
+      $(settings.prevSelector).click(function(e) {
+        e.preventDefault();
+        prev();
+      });
+    }
   }
 
   function disable() {
-    // Unbind triggers and next and prev.
+    // Unbind triggers.
     $triggers.off();
-    $(settings.nextSelector).off();
-    $(settings.prevSelector).off();
+    if (settings.nextSelector)
+      $(settings.nextSelector).off();
+    if (settings.prevSelector)
+      $(settings.prevSelector).off();
   }
 
   function getOnItems() {
@@ -198,7 +204,7 @@ function UnfinishedToggler(options) {
   }
 
   function freezeScrollOff() {
-    $('html').removeAttr('style');
+    $('html').css({ overflow: '' });
   }
 
   function getGroupById(id) {
@@ -206,12 +212,12 @@ function UnfinishedToggler(options) {
   }
 
   function getGroup(input) {
-    // Get the group related to input.
-    // input can be a group number or a jQuery selector for a trigger.
+    // Get the group related to `input`.
+    // `input` can be a group number or a selector for a trigger.
     if (typeof input === 'number') {
       // If input is a number, get the group with that number.
       return getGroupById(input);
-    // If input is a jQuery selector ...
+    // If input is a selector ...
     } else if (settings.scattered) {
       // ... and scattered is true, get the group by its number.
       return getGroupById($(input).data('uft-group'));
@@ -243,21 +249,21 @@ function UnfinishedToggler(options) {
         // If overlap is allowed, turn off current $onItems
         // and turn on $group at the same time.
         turnOff($onItems);
-        actuallyTurnOn();
+        doTheTurningOn();
       } else {
         // If overlap is not allowed, turn on $group
         // only after current $onItems are done turning off.
-        turnOff($onItems, actuallyTurnOn);
+        turnOff($onItems, doTheTurningOn);
       }
     } else {
       // If onlyOneOn is false, just turn $group on.
-      actuallyTurnOn();
+      doTheTurningOn();
     }
 
     if (settings.freezeScroll)
       freezeScrollOn();
 
-    function actuallyTurnOn() {
+    function doTheTurningOn() {
       $group.addClass(transOnClass)
         .removeClass(offClass)
         .addClass(onClass);
@@ -297,11 +303,10 @@ function UnfinishedToggler(options) {
   }
 
   function outsideTurnsOff($group, turningOn) {
-    if (turningOn) {
+    if (turningOn)
       outsideEnable();
-    } else {
+    else
       outsideDisable();
-    }
 
     function outsideEnable() {
       // Make it so that clicking anywhere outside $group
@@ -341,11 +346,10 @@ function UnfinishedToggler(options) {
     var firstGroup = Math.min.apply(Math, groupIds),
         lastGroup = Math.max.apply(Math, groupIds),
         targetGroup;
-    if (dir === 'next') {
+    if (dir === 'next')
       targetGroup = (currentGroup + 1 <= lastGroup) ? currentGroup + 1 : firstGroup;
-    } else if (dir === 'prev') {
+    else if (dir === 'prev')
       targetGroup = (currentGroup - 1 >= firstGroup) ? currentGroup - 1 : lastGroup;
-    }
     trigger(targetGroup);
   }
   function next() {
