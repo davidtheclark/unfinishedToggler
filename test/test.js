@@ -3,7 +3,6 @@ var modal = UnfinishedToggler({
   triggerSelector: '.modal-trigger, .modal-container',
   contentSelector: '.modal-content',
   freezeScroll: true,
-  onTrans: 40,
   offTrans: 500
 });
 
@@ -47,8 +46,12 @@ var nav = UnfinishedToggler({
   groupSelector: '.nav > li',
   triggerSelector: '.nav > li > a',
   onClass: 'is-active',
+  offClass: 'is-inactive',
   outsideTurnsOff: true,
-  innerFocus: 'a'
+  innerFocus: 'a',
+  startOff: true,
+  offTrans: 400,
+  overlap: false
 });
 
 var accordion = UnfinishedToggler({
@@ -71,5 +74,6 @@ var popup = new UnfinishedToggler({
   onClass: 'popup-on',
   offClass: 'popup-off',
   event: 'click focus',
-  outsideTurnsOff: true
-}).turnAllOff();
+  outsideTurnsOff: true,
+  startOff: true
+});

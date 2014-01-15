@@ -6,6 +6,17 @@ body {
   padding-bottom: 20em;
 }
 
+.hide-visually {
+  border: 0;
+  clip: rect(0 0 0 0);
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  padding: 0;
+  position: absolute;
+  width: 1px;
+}
+
 @import "carousel";
 @import "tabs";
 @import "accordion";

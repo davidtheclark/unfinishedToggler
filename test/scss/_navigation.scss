@@ -44,12 +44,21 @@ $nav-i-y: 4em;
 
 // toggling business
 .nav > li {
-  & > .subnav {
-    left: -9999px;
-    z-index: -1;
+  &.is-inactive > .subnav {
+    @extend .hide-visually;
+    opacity: 0;
   }
-  &.is-active > .subnav {
-    left: 0;
-    z-index: 5;
+  &.is-active {
+    z-index: 10;
+    & > .subnav {
+      opacity: 1;
+      transition: opacity 0.3s linear;
+    }
+  }
+  &.is-active-trans,
+  &.is-inactive-trans {
+    & > .subnav {
+      opacity: 0;
+    }
   }
 }

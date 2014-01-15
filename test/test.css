@@ -9,6 +9,18 @@ body {
   padding-bottom: 20em;
 }
 
+.hide-visually,
+.nav > li.is-inactive > .subnav {
+  border: 0;
+  clip: rect(0 0 0 0);
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  padding: 0;
+  position: absolute;
+  width: 1px;
+}
+
 .carousel-c {
   height: 20em;
   position: relative;
@@ -265,14 +277,23 @@ body {
   padding: 1em;
 }
 
-.nav > li > .subnav {
-  left: -9999px;
-  z-index: -1;
+.nav > li.is-inactive > .subnav {
+  opacity: 0;
+}
+
+.nav > li.is-active {
+  z-index: 10;
 }
 
 .nav > li.is-active > .subnav {
-  left: 0;
-  z-index: 5;
+  opacity: 1;
+  -webkit-transition: opacity 0.3s linear;
+  transition: opacity 0.3s linear;
+}
+
+.nav > li.is-active-trans > .subnav,
+.nav > li.is-inactive-trans > .subnav {
+  opacity: 0;
 }
 
 #test-input {

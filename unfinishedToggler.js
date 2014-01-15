@@ -72,7 +72,7 @@ function UnfinishedToggler(options) {
 
     // Turn off all items, if settings say to do that.
     if (settings.startOff)
-      turnOff($items);
+      turnAllOff();
 
     if (settings.initialTrigger && settings.initialTrigger !== 'first') {
       // If there is an initialTrigger to trigger, do it.
@@ -149,12 +149,34 @@ function UnfinishedToggler(options) {
       trigger($groupPart);
   }
 
+  function getScrollbarSize() {
+    // Thanks to code from MagnificPopup
+    if(settings.scrollbarSize === undefined) {
+      var scrollDiv = document.createElement("div");
+      scrollDiv.style.cssText = 'width: 99px; height: 99px; overflow: scroll; position: absolute; top: -9999px;';
+      document.body.appendChild(scrollDiv);
+      settings.scrollbarSize = scrollDiv.offsetWidth - scrollDiv.clientWidth;
+      document.body.removeChild(scrollDiv);
+    }
+    return settings.scrollbarSize;
+  }
+  function hasScrollbar() {
+    return document.body.scrollHeight > $(window).height();
+  }
+
   function freezeScrollOn() {
-    $('html').css({ overflow: 'hidden' });
+    var rootStyles = { overflow: 'hidden' };
+    // If there is a scrollbar
+    if (hasScrollbar) {
+      var scrollbarSize = getScrollbarSize();
+      if (scrollbarSize)
+        rootStyles['margin-right'] = scrollbarSize;
+    }
+    $('html').css(rootStyles);
   }
 
   function freezeScrollOff() {
-    $('html').css({ overflow: '' });
+    $('html').css({ overflow: '', 'margin-right': '' });
   }
 
   function getGroupById(id) {
@@ -191,7 +213,11 @@ function UnfinishedToggler(options) {
   }
 
   function turnOn($group) {
-    var trans = (settings.onTrans) ? settings.onTrans : settings.trans;
+    // User can set only offTrans, and onTrans will be the minimum 10ms,
+    // just to get the class in there to initiate any CSS transitions.
+    var trans = (settings.onTrans) ? settings.onTrans
+              : (settings.offTrans) ? 40
+              : settings.trans;
 
     if (settings.onlyOneOn) {
       var $onItems = getOnItems();
@@ -311,19 +337,17 @@ function UnfinishedToggler(options) {
 
   function turnAllOn() {
     // If onlyOneOn is not true, turn on all items.
-    if (!settings.onlyOneOn) {
+    if (!settings.onlyOneOn)
       turnOn($items);
-    } else {
+    else
       throw new Error('UnfinishedToggler will not turnAllOn with the setting {onlyOneOn: true}.');
-    }
   }
   function turnAllOff() {
     // If allOff is allowed, turn off all items.
-    if (settings.allOff) {
+    if (settings.allOff)
       turnOff($items);
-    } else {
+    else
       throw new Error('UnfinishedToggler will not turnAllOff with the setting {allOff: true}.');
-    }
   }
 
 }

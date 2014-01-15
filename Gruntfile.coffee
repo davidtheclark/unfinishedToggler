@@ -85,12 +85,12 @@ module.exports = (grunt) ->
   grunt.loadNpmTasks "assemble"
 
   grunt.registerTask "styleExamples", [
-    "newer:sass:examples"
+    "sass:examples"
     "autoprefixer:examples"
   ]
   grunt.registerTask "styleTest", [
-    "newer:sass:test"
-    "newer:autoprefixer:test"
+    "sass:test"
+    "autoprefixer:test"
   ]
   grunt.registerTask "dev", [
     "connect"
