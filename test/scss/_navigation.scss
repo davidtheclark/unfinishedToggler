@@ -59,6 +59,7 @@ $nav-i-y: 4em;
   &.is-inactive-trans {
     & > .subnav {
       opacity: 0;
+      transition: opacity 0.3s linear;
     }
   }
 }

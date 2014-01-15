@@ -74,25 +74,23 @@ function UnfinishedToggler(options) {
     if (settings.startOff)
       turnAllOff();
 
-    if (settings.initialTrigger && settings.initialTrigger !== 'first') {
+    if (settings.initialTrigger && settings.initialTrigger !== 'first')
       // If there is an initialTrigger to trigger, do it.
       // But if initialTrigger is 'first', pass it along.
       trigger(settings.initialTrigger);
-    } else if ((!settings.allOff && getOnItems().length === 0) || settings.initialTrigger === 'first') {
+    else if ((!settings.allOff && getOnItems().length === 0) || settings.initialTrigger === 'first')
       // Otherwise, if no initialTrigger but allOff is not allowed
       // and nothing is turned on in the markup,
       // or initialTrigger is 'first',
       // trigger the first trigger with the first event.
       $triggers.first().trigger(settings.event.split(' ')[0]);
-    }
 
     // Fill up an array of relevant groups,
     // used for next() and prev().
     $items.each(function() {
       var thisGroupId = $(this).data('uft-group');
-      if (thisGroupId && groupIds.indexOf(thisGroupId) === -1) {
+      if (thisGroupId && groupIds.indexOf(thisGroupId) === -1)
         groupIds.push(thisGroupId);
-      }
     });
 
     // Enable innerFocus, if settings say to do that.
@@ -186,27 +184,25 @@ function UnfinishedToggler(options) {
   function getGroup(input) {
     // Get the group related to `input`.
     // `input` can be a group number or a selector for a trigger.
-    if (typeof input === 'number') {
+    if (typeof input === 'number')
       // If input is a number, get the group with that number.
       return getGroupById(input);
     // If input is a selector ...
-    } else if (settings.scattered) {
+    else if (settings.scattered)
       // ... and scattered is true, get the group by its number.
       return getGroupById($(input).data('uft-group'));
-    } else {
+    else
       // ... and scattered is false, get the group element.
       return $(input).closest(settings.groupSelector);
-    }
   }
 
   function trigger(input) {
     var $group = getGroup(input),
         turningOn = !$group.hasClass(onClass);
-    if (turningOn) {
+    if (turningOn)
       turnOn($group);
-    } else if (settings.allOff || (!settings.allOff && onCount > 1)) {
+    else if (settings.allOff || (!settings.allOff && onCount > 1))
       turnOff($group);
-    }
     // If outsideTurnsOff, enable it.
     if (settings.outsideTurnsOff)
       outsideTurnsOff($group, turningOn);
@@ -310,14 +306,14 @@ function UnfinishedToggler(options) {
 
   function nextOrPrev(dir) {
     // First, check that next() or prev() make sense with the setup.
+    var nextPrevErrorStart = 'UnfinishedToggler cannot use next() and prev() ';
     if (!settings.onlyOneOn)
-      throw new Error('UnfinishedToggler cannot use next() and prev() with the setting {onlyOneOn: false}.');
+      throw new Error(nextPrevErrorStart + 'with the setting {onlyOneOn: false}.');
     var currentGroup = getOnItems().first().data('uft-group');
-    if (typeof currentGroup === 'undefined') {
-      throw new Error('UnfinishedToggler cannot use next() and prev() unless data-uft-group values are defined.');
-    } else if (typeof currentGroup !== 'number') {
-      throw new Error('UnfinishedToggler cannot use next() and prev() unless data-uft-group values are integers.');
-    }
+    if (typeof currentGroup === 'undefined')
+      throw new Error(nextPrevErrorStart + 'unless data-uft-group values are defined.');
+    else if (typeof currentGroup !== 'number')
+      throw new Error(nextPrevErrorStart + 'unless data-uft-group values are integers.');
 
     var firstGroup = Math.min.apply(Math, groupIds),
         lastGroup = Math.max.apply(Math, groupIds),
