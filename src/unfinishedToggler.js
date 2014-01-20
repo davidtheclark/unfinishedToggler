@@ -2,9 +2,6 @@ function UnfinishedToggler(options) {
 
   var uft = this;
   var s = uft.settings = $.extend({}, uft.defaults, options);
-  // groupIds will contain the IDs of all groups, so methods
-  // next() and prev() know where to go.
-  uft.groupIds = [];
   // onCount should indicate the number of groups
   // currently turned on.
   uft.onCount = 0;
@@ -21,44 +18,53 @@ function UnfinishedToggler(options) {
   // true, items include triggers and contents.
   uft.$items = (!s.scattered) ? uft.$root.find(s.groupSelector) : uft.$triggers.add(uft.$contents);
 
-  // Initialization.
-
-  uft.enable();
-
-  // Turn off all items, if settings say to do that.
-  if (s.startOff)
-    uft.turnAllOff();
-
-  // If there is an initialTrigger to trigger, do it.
-  // But if initialTrigger is 'first', pass it along.
-  if (s.initialTrigger && s.initialTrigger !== 'first')
-    uft.trigger(s.initialTrigger);
-
-  // Otherwise, if no initialTrigger but allOff is not allowed
-  // and nothing is turned on in the markup,
-  // or initialTrigger is 'first',
-  // trigger the first trigger with the first event.
-  else if ((!s.allOff && !uft.getOnItems().length) || s.initialTrigger === 'first')
-    uft.$triggers.first().trigger(s.event.split(' ')[0]);
-
-  // Enable innerFocus, if settings say to do that.
-  if (s.innerFocus) {
-    uft.$root.find(s.innerFocus).on('focus', function(e) {
-      uft.innerFocus.call(uft, e);
-    });
-  }
-
-  // Fill up an array of relevant groups,
-  // used for next() and prev().
-  uft.$items.each(function() {
-    var thisGroupId = $(this).data('uft-group');
-    if (thisGroupId && uft.groupIds.indexOf(thisGroupId) === -1)
-      uft.groupIds.push(thisGroupId);
-  });
-
+  uft.init();
 }
 
 UnfinishedToggler.prototype = {
+
+  init: function() {
+    var uft = this,
+        s = uft.settings;
+
+    uft.enable();
+
+    // Turn off all items, if settings say to do that.
+    if (s.startOff)
+      uft.turnAllOff();
+
+    // If there is an initialTrigger to trigger, do it.
+    // But if initialTrigger is 'first', pass it along.
+    if (s.initialTrigger && s.initialTrigger !== 'first')
+      uft.trigger(s.initialTrigger);
+
+    // Otherwise, if no initialTrigger but allOff is not allowed
+    // and nothing is turned on in the markup,
+    // or initialTrigger is 'first',
+    // trigger the first trigger with the first event.
+    else if ((!s.allOff && !uft.getOnItems().length) || s.initialTrigger === 'first')
+      uft.$triggers.first().trigger(s.event.split(' ')[0]);
+
+    // NEXT AND PREV
+    // groupIds will contain the IDs of all groups, so methods
+    // next() and prev() know where to go.
+    uft.groupIds = [];
+    // Fill up an array of relevant groups,
+    // used for next() and prev().
+    uft.$items.each(function() {
+      var thisGroupId = $(this).data('uft-group');
+      if (thisGroupId && uft.groupIds.indexOf(thisGroupId) === -1)
+        uft.groupIds.push(thisGroupId);
+    });
+
+    // INNER FOCUS
+    // Enable innerFocus, if settings say to do that.
+    if (s.innerFocus) {
+      uft.$root.find(s.innerFocus).on('focus', function(e) {
+        uft.innerFocus.call(uft, e);
+      });
+    }
+  },
 
   enable: function() {
     var uft = this,
@@ -226,34 +232,145 @@ UnfinishedToggler.prototype = {
       this.turnOff(this.$items);
     else
       throw new Error('UnfinishedToggler will not turnAllOff with the setting {allOff: true}.');
+  },
+
+
+  /*============================
+  NEXT AND PREVIOUS
+  ==============================*/
+
+  nextOrPrev: function(dir) {
+    var uft = this,
+        s = uft.settings,
+        nextPrevErrorStart = 'UnfinishedToggler cannot use next() and prev() ',
+        currentGroup, firstGroup, lastGroup, targetGroup;
+
+    // First, check that next() or prev() make sense with the setup.
+    if (!s.onlyOneOn)
+      throw new Error(nextPrevErrorStart + 'with the setting {onlyOneOn: false}.');
+
+    currentGroup = uft.getOnItems().first().data('uft-group');
+    if (typeof currentGroup === 'undefined')
+      throw new Error(nextPrevErrorStart + 'unless data-uft-group values are defined.');
+    else if (typeof currentGroup !== 'number')
+      throw new Error(nextPrevErrorStart + 'unless data-uft-group values are integers.');
+
+    firstGroup = Math.min.apply(Math, uft.groupIds);
+    lastGroup = Math.max.apply(Math, uft.groupIds);
+    if (dir === 'next')
+      targetGroup = (currentGroup + 1 <= lastGroup) ? currentGroup + 1 : firstGroup;
+    else if (dir === 'prev')
+      targetGroup = (currentGroup - 1 >= firstGroup) ? currentGroup - 1 : lastGroup;
+    uft.trigger(targetGroup);
+  },
+
+  next: function() {
+    this.nextOrPrev('next');
+  },
+
+  prev: function() {
+    this.nextOrPrev('prev');
+  },
+
+
+  /*============================
+  FREEZE SCROLL
+  ==============================*/
+
+  freezeScrollOn: function() {
+    var uft = this,
+        rootStyles = { overflow: 'hidden' };
+    // If there is a scrollbar
+    if (uft.hasScrollbar) {
+      var scrollbarSize = uft.getScrollbarSize();
+      if (scrollbarSize)
+        rootStyles['margin-right'] = scrollbarSize;
+    }
+    $('html').css(rootStyles);
+  },
+
+  freezeScrollOff: function() {
+    $('html').css({ 'overflow': '', 'margin-right': '' });
+  },
+
+  getScrollbarSize: function() {
+    // Thanks to code from MagnificPopup
+    if(this.scrollbarSize === undefined) {
+      var scrollDiv = document.createElement("div");
+      scrollDiv.style.cssText = 'width: 99px; height: 99px; overflow: scroll; position: absolute; top: -9999px;';
+      document.body.appendChild(scrollDiv);
+      this.scrollbarSize = scrollDiv.offsetWidth - scrollDiv.clientWidth;
+      document.body.removeChild(scrollDiv);
+    }
+    return this.scrollbarSize;
+  },
+
+  hasScrollbar: function() {
+    return document.body.scrollHeight > $(window).height();
+  },
+
+
+  /*============================
+  INNER FOCUS
+  ==============================*/
+
+  innerFocus: function(e) {
+    // Find the focus-target's group, and trigger it.
+    var uft = this,
+        s = uft.settings,
+        $el = $(e.target),
+        $groupPart = (!s.scattered) ? $el : $el.closest(s.contentSelector),
+        groupIsOn = uft.isOn(uft.getGroup($groupPart));
+
+    if (!groupIsOn)
+      uft.trigger($groupPart);
+  },
+
+
+  /*============================
+  OUTSIDE TURNS OFF
+  ==============================*/
+
+  outsideTurnsOff: function($group, turningOn) {
+    var uft = this,
+        s = uft.settings,
+        ev = 'click.uft touchend.uft',
+        $inside = (typeof s.outsideTurnsOff === 'string') ? $(s.outsideTurnsOff) : $group;
+
+    if (turningOn)
+      outsideEnable();
+    else
+      outsideDisable();
+
+    function outsideEnable() {
+      // Make it so that clicking anywhere outside $group
+      // turns off $group.
+      // touchend is necessary for iOS.
+      $inside.on(ev, function(e) {
+        e.stopPropagation();
+      });
+      // Only allow the event once: it will get
+      // re-delegated if $group opens again.
+      $('html').on(ev, outsideTriggered);
+    }
+
+    function outsideDisable() {
+      $('html').off('.uft');
+    }
+
+    function outsideTriggered(e) {
+      if (!$inside.is($(e.target))) {
+        uft.turnOff($group);
+        outsideDisable();
+      }
+    }
   }
+
+
 };
 
 UnfinishedToggler.prototype.utils = {
   // Utils are generic functions required by but not specific to UFT.
-  simpleDebounce: function(func) {
-    // Basically taken from Underscore and simplified.
-    var timeout, args, context, timestamp, result;
-    var wait = 200;
-    return function() {
-      context = this;
-      args = arguments;
-      timestamp = new Date();
-      var later = function() {
-        var last = (new Date()) - timestamp;
-        if (last < wait) {
-          timeout = setTimeout(later, wait - last);
-        } else {
-          timeout = null;
-          result = func.apply(context, args);
-        }
-      };
-      if (!timeout)
-        timeout = setTimeout(later, wait);
-      return result;
-    };
-  },
-
   optionalDelay: function(delay, func) {
     if (delay > 0)
       window.setTimeout(func, delay);
@@ -261,40 +378,6 @@ UnfinishedToggler.prototype.utils = {
       func();
   }
 };
-
-UnfinishedToggler.prototype.utils = {
-  // Utils are generic functions required by but not specific to UFT.
-  simpleDebounce: function(func) {
-    // Basically taken from Underscore and simplified.
-    var timeout, args, context, timestamp, result;
-    var wait = 200;
-    return function() {
-      context = this;
-      args = arguments;
-      timestamp = new Date();
-      var later = function() {
-        var last = (new Date()) - timestamp;
-        if (last < wait) {
-          timeout = setTimeout(later, wait - last);
-        } else {
-          timeout = null;
-          result = func.apply(context, args);
-        }
-      };
-      if (!timeout)
-        timeout = setTimeout(later, wait);
-      return result;
-    };
-  },
-
-  optionalDelay: function(delay, func) {
-    if (delay > 0)
-      window.setTimeout(func, delay);
-    else
-      func();
-  }
-};
-
 
 UnfinishedToggler.prototype.defaults = {
   // selector for a context-element containing all the others,
@@ -305,10 +388,6 @@ UnfinishedToggler.prototype.defaults = {
   'groupSelector': '.uft-group',
   'triggerSelector': '.uft-trigger',
   'contentSelector': '.uft-content',
-  // selector for a "next" trigger
-  'nextSelector': false,
-  // selector for a "prev" trigger
-  'prevSelector': false,
   // scattered is true if the triggers and content
   // are not children of group-elements. scattered groups
   // are identified by data-uft-group attributes.
@@ -322,24 +401,33 @@ UnfinishedToggler.prototype.defaults = {
   // a selector for a trigger to trigger right away
   'initialTrigger' : false,
   // the event(s) that triggers a change
-  'event' : 'click',
+  'event': 'click',
   // a callback to perform after instance is turned on
   'onCallback': function(){},
   // a callback to perform after instance is turned off
   'offCallback': function(){},
-
+  // Class that is added just after tunring on and removed
+  // just before turning off, useful for added transitions.
   'transClass': 'uft-trans',
+  // Delay between turning on and adding transClass.
+  // 40ms is minimum, in case turning on involves `display` switch.
   'onTransDelay': 40,
+  // Time between removing transClass and turning off.
   'offTransTime': 0,
-
-  // transition on and off state will overlap
+  // transClasses of multiple groups can overlap.
   'transOverlap': true,
-  // a click outside of the group turns it off
-  'outsideTurnsOff': false,
-  // selectors for inner elements that will turn
-  // on the group when they receive focus
+
+  // NEXT AND PREV
+  'nextSelector': false,
+  'prevSelector': false,
+
+  // FREEZE SCROLL
+  'freezeScroll': false,
+
+  // INNER FOCUS
   'innerFocus': false,
-  // freeze scrolling when a group is open
-  // (useful for modals)
-  'freezeScroll': false
+
+  // OUTSIDE TUNRS OFF
+  'outsideTurnsOff': false
+
 };
