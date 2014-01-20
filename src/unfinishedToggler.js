@@ -18,7 +18,12 @@ function UnfinishedToggler(options) {
   // true, items include triggers and contents.
   uft.$items = (!s.scattered) ? uft.$root.find(s.groupSelector) : uft.$triggers.add(uft.$contents);
 
+  uft.data = {
+    isDebouncing: false
+  };
+
   uft.init();
+
 }
 
 UnfinishedToggler.prototype = {
@@ -49,12 +54,10 @@ UnfinishedToggler.prototype = {
     // groupIds will contain the IDs of all groups, so methods
     // next() and prev() know where to go.
     uft.groupIds = [];
-    // Fill up an array of relevant groups,
-    // used for next() and prev().
-    uft.$items.each(function() {
-      var thisGroupId = $(this).data('uft-group');
+    uft.groupIds = $.map(uft.$items, function(group, i) {
+      var thisGroupId = $(group).data('uft-group');
       if (thisGroupId && uft.groupIds.indexOf(thisGroupId) === -1)
-        uft.groupIds.push(thisGroupId);
+        return thisGroupId;
     });
 
     // INNER FOCUS
@@ -70,11 +73,15 @@ UnfinishedToggler.prototype = {
     var uft = this,
         s = uft.settings;
     // Bind triggers.
-    uft.$triggers.on(s.event, uft.utils.simpleDebounce(function(e) {
-      var thisTrigger = this;
-      e.preventDefault();
-      uft.trigger.call(uft, thisTrigger);
-    }));
+    // NEEDS DEBOUCE
+    uft.$triggers.on(s.event, function(e) {
+      if (!uft.data.isDebouncing) {
+        uft.data.isDebouncing = true;
+        var thisTrigger = this;
+        e.preventDefault();
+        uft.trigger.call(uft, thisTrigger);
+      }
+    });
     // Bind next and prev, if they exist.
     if (s.nextSelector) {
       $(s.nextSelector).click(function(e) {
@@ -121,6 +128,13 @@ UnfinishedToggler.prototype = {
   getOnItems: function() {
     // Get all relevant elements marked by the onClass.
     return this.$items.filter('.' + this.onClass);
+  },
+
+  transitionDone: function() {
+    var uft = this;
+    setTimeout(function() {
+      uft.data.isDebouncing = false;
+    }, 200);
   },
 
   getGroup: function(input) {
@@ -177,6 +191,8 @@ UnfinishedToggler.prototype = {
       // Call user-defined callback, passing some data.
       s.onCallback({ '$group': $group, 'action': 'on'});
       uft.onCount++;
+
+      uft.transitionDone();
     }
   },
 
@@ -198,6 +214,8 @@ UnfinishedToggler.prototype = {
         // Call user-defined callback, passing some data.
         s.offCallback({ '$group': $group, 'action': 'off'});
         uft.onCount--;
+
+        uft.transitionDone();
       });
       if (s.freezeScroll)
         uft.utils.optionalDelay(s.offTransTime, uft.freezeScrollOff);
@@ -351,7 +369,9 @@ UnfinishedToggler.prototype = {
       });
       // Only allow the event once: it will get
       // re-delegated if $group opens again.
-      $('html').on(ev, outsideTriggered);
+      setTimeout(function() {
+        $('html').on(ev, outsideTriggered);
+      }, 40);
     }
 
     function outsideDisable() {
@@ -365,8 +385,6 @@ UnfinishedToggler.prototype = {
       }
     }
   }
-
-
 };
 
 UnfinishedToggler.prototype.utils = {

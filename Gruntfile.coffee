@@ -62,6 +62,7 @@ module.exports = (grunt) ->
           "examples/style/css/*.css"
           "examples/js/*.js"
           "test/*.{html,css,js}"
+          "src/*.js"
         ]
       examplesSass:
         files: [
