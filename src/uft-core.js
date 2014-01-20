@@ -60,7 +60,6 @@ function UnfinishedToggler(options) {
 
 UnfinishedToggler.prototype = {
 
-
   enable: function() {
     var uft = this,
         s = uft.settings;
@@ -138,15 +137,10 @@ UnfinishedToggler.prototype = {
   turnOn: function($group) {
     var uft = this,
         s = uft.settings;
-        // User can set only offTrans, and onTrans will be the minimum 10ms,
-        // just to get the class in there to initiate any CSS transitions.
-        trans = (s.onTrans) ? s.onTrans
-              : (s.offTrans) ? 40
-              : s.trans;
 
     if (s.onlyOneOn) {
       var $onItems = uft.getOnItems();
-      if (s.overlap) {
+      if (s.transOverlap) {
         // If overlap is allowed, turn off current $onItems
         // and turn on $group at the same time.
         uft.turnOff($onItems);
@@ -165,15 +159,17 @@ UnfinishedToggler.prototype = {
       uft.freezeScrollOn();
 
     function doTheTurningOn() {
-      $group.addClass(uft.transOnClass)
-        .removeClass(uft.offClass)
+      $group.removeClass(uft.offClass)
         .addClass(uft.onClass);
+
+      // After a delay (40ms by default in case the on/off switch
+      // does something with `display`) add the transition class.
+      uft.utils.optionalDelay(s.onTransDelay, function() {
+        $group.addClass(s.transClass);
+      });
+
       // Call user-defined callback, passing some data.
       s.onCallback({ '$group': $group, 'action': 'on'});
-      uft.utils.optionalDelay(trans, function() {
-        // After the transition delay, remove the transition class.
-        $group.removeClass(uft.transOnClass);
-      });
       uft.onCount++;
     }
   },
@@ -181,25 +177,25 @@ UnfinishedToggler.prototype = {
   turnOff: function($group, callback) {
     var uft = this,
         s = uft.settings,
-        cb = callback || function(){},
-        trans = (s.offTrans) ? s.offTrans : s.trans;
+        cb = callback || function(){};
 
     if ($group.length) {
       // First, add the transition class.
-      $group.addClass(uft.transOffClass);
-      uft.utils.optionalDelay(trans, function() {
+      $group.removeClass(s.transClass);
+
+      uft.utils.optionalDelay(s.offTransTime, function() {
         cb();
         // Then remove it, and toggle on/off classes,
         // after the transition delay.
-        $group.removeClass(uft.transOffClass)
-          .removeClass(uft.onClass)
+        $group.removeClass(uft.onClass)
           .addClass(uft.offClass);
         // Call user-defined callback, passing some data.
         s.offCallback({ '$group': $group, 'action': 'off'});
         uft.onCount--;
       });
       if (s.freezeScroll)
-        uft.utils.optionalDelay(trans, uft.freezeScrollOff);
+        uft.utils.optionalDelay(s.offTransTime, uft.freezeScrollOff);
+
     } else {
       // If the group is empty, just call the callback.
       cb();
@@ -216,102 +212,6 @@ UnfinishedToggler.prototype = {
       $(s.prevSelector).off();
   },
 
-  innerFocus: function(e) {
-    // Find the focus-target's group, and trigger it.
-    var uft = this,
-        s = uft.settings,
-        $el = $(e.target),
-        $groupPart = (!s.scattered) ? $el : $el.closest(s.contentSelector),
-        groupIsOn = uft.isOn(uft.getGroup($groupPart));
-
-    if (!groupIsOn)
-      uft.trigger($groupPart);
-  },
-
-  outsideTurnsOff: function($group, turningOn) {
-    var uft = this,
-        s = uft.settings,
-        ev = 'click touchend',
-        $inside = (s.outsideTurnsOff) ? $group : $(s.outsideTurnsOff);
-
-    if (turningOn)
-      outsideEnable();
-    else
-      outsideDisable();
-
-    function outsideEnable() {
-      // Make it so that clicking anywhere outside $group
-      // turns off $group.
-      // touchend is necessary for iOS.
-      $inside.on(ev, function(e) {
-        e.stopPropagation();
-      });
-      // Only allow the event once: it will get
-      // re-delegated if $group opens again.
-      $(document).one(ev, outsideTriggered);
-    }
-
-    function outsideDisable() {
-      $(document).off(ev, outsideTriggered);
-    }
-
-    function outsideTriggered(e) {
-      if (!$inside.is($(e.target))) {
-        uft.turnOff($group);
-        outsideDisable();
-      }
-    }
-  },
-
-  freezeScrollOn: function() {
-    var uft = this,
-        rootStyles = { overflow: 'hidden' };
-    // If there is a scrollbar
-    if (uft.utils.hasScrollbar) {
-      var scrollbarSize = uft.utils.getScrollbarSize();
-      if (scrollbarSize)
-        rootStyles['margin-right'] = scrollbarSize;
-    }
-    $('html').css(rootStyles);
-  },
-
-  freezeScrollOff: function() {
-    $('html').css({ 'overflow': '', 'margin-right': '' });
-  },
-
-  nextOrPrev: function(dir) {
-    var uft = this,
-        s = uft.settings,
-        nextPrevErrorStart = 'UnfinishedToggler cannot use next() and prev() ',
-        currentGroup, firstGroup, lastGroup, targetGroup;
-
-    // First, check that next() or prev() make sense with the setup.
-    if (!s.onlyOneOn)
-      throw new Error(nextPrevErrorStart + 'with the setting {onlyOneOn: false}.');
-
-    currentGroup = uft.getOnItems().first().data('uft-group');
-    if (typeof currentGroup === 'undefined')
-      throw new Error(nextPrevErrorStart + 'unless data-uft-group values are defined.');
-    else if (typeof currentGroup !== 'number')
-      throw new Error(nextPrevErrorStart + 'unless data-uft-group values are integers.');
-
-    firstGroup = Math.min.apply(Math, uft.groupIds);
-    lastGroup = Math.max.apply(Math, uft.groupIds);
-    if (dir === 'next')
-      targetGroup = (currentGroup + 1 <= lastGroup) ? currentGroup + 1 : firstGroup;
-    else if (dir === 'prev')
-      targetGroup = (currentGroup - 1 >= firstGroup) ? currentGroup - 1 : lastGroup;
-    uft.trigger(targetGroup);
-  },
-
-  next: function() {
-    this.nextOrPrev('next');
-  },
-
-  prev: function() {
-    this.nextOrPrev('prev');
-  },
-
   turnAllOn: function() {
     // If onlyOneOn is not true, turn on all items.
     if (!this.settings.onlyOneOn)
@@ -326,6 +226,72 @@ UnfinishedToggler.prototype = {
       this.turnOff(this.$items);
     else
       throw new Error('UnfinishedToggler will not turnAllOff with the setting {allOff: true}.');
+  }
+};
+
+UnfinishedToggler.prototype.utils = {
+  // Utils are generic functions required by but not specific to UFT.
+  simpleDebounce: function(func) {
+    // Basically taken from Underscore and simplified.
+    var timeout, args, context, timestamp, result;
+    var wait = 200;
+    return function() {
+      context = this;
+      args = arguments;
+      timestamp = new Date();
+      var later = function() {
+        var last = (new Date()) - timestamp;
+        if (last < wait) {
+          timeout = setTimeout(later, wait - last);
+        } else {
+          timeout = null;
+          result = func.apply(context, args);
+        }
+      };
+      if (!timeout)
+        timeout = setTimeout(later, wait);
+      return result;
+    };
+  },
+
+  optionalDelay: function(delay, func) {
+    if (delay > 0)
+      window.setTimeout(func, delay);
+    else
+      func();
+  }
+};
+
+UnfinishedToggler.prototype.utils = {
+  // Utils are generic functions required by but not specific to UFT.
+  simpleDebounce: function(func) {
+    // Basically taken from Underscore and simplified.
+    var timeout, args, context, timestamp, result;
+    var wait = 200;
+    return function() {
+      context = this;
+      args = arguments;
+      timestamp = new Date();
+      var later = function() {
+        var last = (new Date()) - timestamp;
+        if (last < wait) {
+          timeout = setTimeout(later, wait - last);
+        } else {
+          timeout = null;
+          result = func.apply(context, args);
+        }
+      };
+      if (!timeout)
+        timeout = setTimeout(later, wait);
+      return result;
+    };
+  },
+
+  optionalDelay: function(delay, func) {
+    if (delay > 0)
+      window.setTimeout(func, delay);
+    else
+      func();
   }
 };
 
@@ -361,15 +327,13 @@ UnfinishedToggler.prototype.defaults = {
   'onCallback': function(){},
   // a callback to perform after instance is turned off
   'offCallback': function(){},
-  // transition time when turning on
-  'onTrans': 0,
-  // transition time when turning off
-  'offTrans': 0,
-  // transition time when turning both on and off
-  // (used INSTEAD OF onTrans and offTrans)
-  'trans': 0,
+
+  'transClass': 'uft-trans',
+  'onTransDelay': 40,
+  'offTransTime': 0,
+
   // transition on and off state will overlap
-  'overlap': true,
+  'transOverlap': true,
   // a click outside of the group turns it off
   'outsideTurnsOff': false,
   // selectors for inner elements that will turn

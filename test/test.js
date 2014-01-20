@@ -1,9 +1,10 @@
-var modal = UnfinishedToggler({
+var modal = new UnfinishedToggler({
   scattered: true,
-  triggerSelector: '.modal-trigger, .modal-container',
+  triggerSelector: '.modal-trigger',
   contentSelector: '.modal-content',
   freezeScroll: true,
-  offTrans: 500
+  offTransTime: 400,
+  outsideTurnsOff: '.modal-popup'
 });
 
 // adding escape to close modal
@@ -13,7 +14,7 @@ $(document).keyup(function(e) {
   }
 });
 
-var carousel = UnfinishedToggler({
+var carousel = new UnfinishedToggler({
   root: '#carousel',
   contentSelector: '.carousel-i',
   triggerSelector: '.carousel-tracker',
@@ -21,27 +22,24 @@ var carousel = UnfinishedToggler({
   prevSelector: '#carousel-prev',
   allOff: false,
   startOff: false,
-  scattered: true,
-  trans: 500
+  scattered: true
 });
 
-var input = UnfinishedToggler({
+var input = new UnfinishedToggler({
   triggerSelector: '#test-input',
   groupSelector: '#input',
   outsideTurnsOff: true
 });
 
-var tabs = UnfinishedToggler({
+var tabs = new UnfinishedToggler({
   root: '#tabs',
   scattered: true,
   allOff: false,
-  startOff: false,
-  trans: 300,
-  overlap: false
+  startOff: false
 });
 
 
-var nav = UnfinishedToggler({
+var nav = new UnfinishedToggler({
   root: '#nav',
   groupSelector: '.nav > li',
   triggerSelector: '.nav > li > a',
@@ -50,11 +48,11 @@ var nav = UnfinishedToggler({
   outsideTurnsOff: true,
   innerFocus: 'a',
   startOff: true,
-  offTrans: 400,
-  overlap: false
+  offTransTime: 300,
+  transOverlap: false
 });
 
-var accordion = UnfinishedToggler({
+var accordion = new UnfinishedToggler({
   root: '#accordion',
   scattered: true,
   contentSelector: '.uft-group',
@@ -62,7 +60,6 @@ var accordion = UnfinishedToggler({
     uft.$group.find('.accordion-content').slideDown();
     $('html, body').animate({scrollTop: uft.$group.offset().top});
   },
-  onTrans: 300,
   offCallback: function(uft) {
     uft.$group.find('.accordion-content').slideUp();
   }

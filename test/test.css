@@ -277,7 +277,9 @@ body {
   padding: 1em;
 }
 
-.nav > li.is-inactive > .subnav {
+.nav > li > .subnav {
+  -webkit-transition: opacity 0.3s linear;
+  transition: opacity 0.3s linear;
   opacity: 0;
 }
 
@@ -285,17 +287,8 @@ body {
   z-index: 10;
 }
 
-.nav > li.is-active > .subnav {
+.nav > li.uft-trans > .subnav {
   opacity: 1;
-  -webkit-transition: opacity 0.3s linear;
-  transition: opacity 0.3s linear;
-}
-
-.nav > li.is-active-trans > .subnav,
-.nav > li.is-inactive-trans > .subnav {
-  opacity: 0;
-  -webkit-transition: opacity 0.3s linear;
-  transition: opacity 0.3s linear;
 }
 
 #test-input {
@@ -402,6 +395,26 @@ body {
   width: 1px;
 }
 
+@-webkit-keyframes fade {
+  0% {
+    opacity: 0;
+  }
+
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes fade {
+  0% {
+    opacity: 0;
+  }
+
+  100% {
+    opacity: 1;
+  }
+}
+
 .modal-container {
   background: rgba(0, 0, 0, 0.8);
   position: fixed;
@@ -409,21 +422,12 @@ body {
   right: 0;
   bottom: 0;
   left: 0;
-  display: none;
   z-index: 1000;
-  -webkit-transition: opacity 0.2s linear;
-  transition: opacity 0.2s linear;
   text-align: center;
-}
-
-.modal-container.uft-on {
-  display: block;
-  opacity: 1;
-}
-
-.modal-container.uft-on-trans,
-.modal-container.uft-off-trans {
+  display: none;
   opacity: 0;
+  -webkit-transition: opacity 0.3s linear;
+  transition: opacity 0.3s linear;
 }
 
 .modal-container:before {
@@ -433,37 +437,30 @@ body {
   content: "";
 }
 
+.modal-container.uft-on {
+  display: block;
+}
+
+.modal-container.uft-trans {
+  opacity: 1;
+}
+
 .modal-popup {
   background: white;
   padding: 1em;
   max-width: 600px;
-  display: none;
-  -webkit-transform: translateY(0);
-  -ms-transform: translateY(0);
-  transform: translateY(0);
-  -webkit-transition-property: -webkit-transform opacity;
-  transition-property: transform opacity;
-  -webkit-transition-duration: 0.3s;
-  transition-duration: 0.3s;
-  -webkit-transition-delay: 0.2s;
-  transition-delay: 0.2s;
-}
-
-.modal-popup.uft-on {
   display: inline-block;
-}
-
-.modal-popup.uft-on-trans,
-.modal-popup.uft-off-trans {
   -webkit-transform: translateY(-200px);
   -ms-transform: translateY(-200px);
   transform: translateY(-200px);
-  opacity: 0;
+  -webkit-transition: -webkit-transform 0.3s linear;
+  transition: transform 0.3s linear;
 }
 
-.modal-popup.uft-off-trans {
-  -webkit-transition-delay: 0;
-  transition-delay: 0;
+.modal-popup.uft-trans {
+  -webkit-transform: translateY(0);
+  -ms-transform: translateY(0);
+  transform: translateY(0);
 }
 
 @media only screen and (max-width: 600px) {

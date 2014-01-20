@@ -1,3 +1,8 @@
+@keyframes fade {
+  0% { opacity: 0; }
+  100% { opacity: 1; }
+}
+
 .modal-container {
   background: rgba(0,0,0,0.8);
   position: fixed;
@@ -5,17 +10,7 @@
   right: 0;
   bottom: 0;
   left: 0;
-  display: none;
   z-index: 1000;
-  &.uft-on {
-    display: block;
-    opacity: 1;
-  }
-  transition: opacity 0.2s linear;
-  &.uft-on-trans,
-  &.uft-off-trans {
-    opacity: 0;
-  }
   text-align: center;
   &:before {
     vertical-align: middle;
@@ -23,28 +18,31 @@
     height: 100%;
     content: "";
   }
+
+  display: none;
+  &.uft-on {
+    display: block;
+  }
+
+  opacity: 0;
+  transition: opacity 0.3s linear;
+  &.uft-trans {
+    opacity: 1;
+  }
+
 }
+
 
 .modal-popup {
   background: white;
   padding: 1em;
   max-width: 600px;
-  display: none;
+  display: inline-block;
 
-  transform: translateY(0);
-  transition-property: transform opacity;
-  transition-duration: 0.3s;
-  transition-delay: 0.2s;
-  &.uft-on {
-    display: inline-block;
-  }
-  &.uft-on-trans,
-  &.uft-off-trans {
-    transform: translateY(-200px);
-    opacity: 0;
-  }
-  &.uft-off-trans {
-    transition-delay: 0;
+  transform: translateY(-200px);
+  transition: transform 0.3s linear;
+  &.uft-trans {
+    transform: translateY(0);
   }
 
   @media only screen and (max-width: 600px) {
