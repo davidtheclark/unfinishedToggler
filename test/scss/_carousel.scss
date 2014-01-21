@@ -13,14 +13,15 @@
   font-size: 7em;
   font-weight: bold;
 
-  transition: transform 0.5s linear;
+  transition: transform 0.4s linear;
   display: none;
+  transform: translateX(100%);
   &.uft-on {
     display: block;
-    &.uft-on-trans {
+    &.uft-trans {
       transform: translateX(0);
     }
-    &.uft-off-trans {
+    &.uft-trans-off {
       transform: translateX(-100%);
       z-index: 3;
     }

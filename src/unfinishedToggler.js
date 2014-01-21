@@ -12,16 +12,6 @@ function UnfinishedToggler(options) {
   uft.$items = (!s.scattered) ? uft.$root.find(s.groupSelector)
                               : uft.$triggers.add(uft.$root.find(s.contentSelector));
 
-  // nmEvents is a namespaced version of the triggering events.
-  uft.nmEvents = $.map(s.events, function(ev) {
-    return uft.namespaceEvent(ev);
-  }).join(' ');
-
-
-  uft.data = {
-    isDebouncing: false
-  };
-
   uft.init();
 }
 
@@ -31,6 +21,16 @@ UnfinishedToggler.prototype = {
     var uft = this,
         s = uft.settings;
 
+    uft.data = {
+      isDebouncing: false
+    };
+
+    // nmEvents is a namespaced version of the triggering events.
+    uft.nmEvents = $.map(s.events, function(ev) {
+      return uft.namespaceEvent(ev);
+    }).join(' ');
+
+    // Enable!
     uft.enable();
 
     // If nothing is turned on in the markup,
@@ -207,17 +207,21 @@ UnfinishedToggler.prototype = {
   turnOff: function($group, callback) {
     var uft = this,
         s = uft.settings,
-        cb = callback || function(){};
+        cb = callback || function(){},
+        offTransClass = s.transClass + '-off';
 
     if ($group.length) {
 
-      // First, remove transClass.
-      $group.removeClass(s.transClass);
+      // First, remove transClass and add
+      // offTransClass.
+      $group.removeClass(s.transClass)
+        .addClass(offTransClass);
 
       uft.utils.optionalDelay(s.offTransTime, function() {
         // After the specificied delay, do the rest.
         cb();
         $group.removeClass(s.onClass)
+          .removeClass(offTransClass)
           .addClass(s.offClass);
         // Call user-defined callback, passing some data.
         s.offCallback({ '$group': $group, 'action': 'off'});

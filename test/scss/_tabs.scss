@@ -28,17 +28,15 @@
 }
 
 .tab-content {
-  opacity: 1;
-  transition: opacity 0.3s linear;
-  &.uft-on-trans,
-  &.uft-off-trans {
-    opacity: 0;
-  }
   &.uft-off {
-    opacity: 0;
-    position: absolute;
-    top: 0;
-    left: 0;
-    z-index: -10;
+    @extend .hide-visually;
+  }
+  transform: translateX(150%);
+  transition: transform 0.5s linear;
+  &.uft-trans {
+    transform: translateX(0);
+  }
+  &.uft-trans-off {
+    transform: translateX(-150%);
   }
 }

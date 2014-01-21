@@ -21,8 +21,8 @@ var carousel = new UnfinishedToggler({
   nextSelector: '#carousel-next',
   prevSelector: '#carousel-prev',
   allOff: false,
-  startOff: false,
-  scattered: true
+  scattered: true,
+  offTransTime: 400
 });
 
 var input = new UnfinishedToggler({
@@ -35,7 +35,8 @@ var tabs = new UnfinishedToggler({
   root: '#tabs',
   scattered: true,
   allOff: false,
-  startOff: false
+  transOverlap: false,
+  offTransTime: 500
 });
 
 
@@ -47,7 +48,6 @@ var nav = new UnfinishedToggler({
   offClass: 'is-inactive',
   outsideTurnsOff: true,
   innerFocus: 'a',
-  startOff: true,
   offTransTime: 300,
   transOverlap: false
 });
@@ -56,12 +56,14 @@ var accordion = new UnfinishedToggler({
   root: '#accordion',
   scattered: true,
   contentSelector: '.uft-group',
+  onTransDelay: 300,
+  offTransTime: 300,
   onCallback: function(uft) {
-    uft.$group.find('.accordion-content').slideDown();
+    uft.$group.find('.accordion-content').slideDown(300);
     $('html, body').animate({scrollTop: uft.$group.offset().top});
   },
   offCallback: function(uft) {
-    uft.$group.find('.accordion-content').slideUp();
+    uft.$group.find('.accordion-content').slideUp(300);
   }
 });
 
@@ -70,7 +72,6 @@ var popup = new UnfinishedToggler({
   groupSelector: '.popup-g',
   onClass: 'popup-on',
   offClass: 'popup-off',
-  events: ['click', 'focus'],
-  outsideTurnsOff: true,
-  startOff: true
+  events: ['click', 'focus', 'mouseover'],
+  outsideTurnsOff: true
 });
