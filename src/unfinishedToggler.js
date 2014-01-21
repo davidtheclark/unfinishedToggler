@@ -17,6 +17,10 @@ function UnfinishedToggler(options) {
 
 UnfinishedToggler.prototype = {
 
+  /*============================
+  INITIALIZATION
+  ==============================*/
+
   init: function() {
     var uft = this,
         s = uft.settings;
@@ -62,60 +66,15 @@ UnfinishedToggler.prototype = {
     }
   },
 
+
+  /*============================
+  LITTLE UTIL FUNCTIONS
+  ==============================*/
+
   namespaceEvent: function(ev) {
     return ev + '.' + this.settings.eventNamespace;
   },
 
-  enable: function() {
-    var uft = this,
-        s = uft.settings;
-
-    // Bind triggers.
-    uft.$triggers.on(uft.nmEvents, function(e) {
-      if (!uft.data.isDebouncing) {
-        uft.data.isDebouncing = true;
-        e.preventDefault();
-        uft.trigger.call(uft, this);
-      }
-    });
-
-    // Bind next and prev, if they exist.
-    if (s.nextSelector) {
-      $(s.nextSelector).on(uft.namespaceEvent('click'), function(e) {
-        e.preventDefault();
-        uft.next.call(uft, this);
-      });
-    }
-    if (s.prevSelector) {
-      $(s.prevSelector).on(uft.namespaceEvent('click'), function(e) {
-        e.preventDefault();
-        uft.prev.call(uft, this);
-      });
-    }
-  },
-
-  trigger: function(input) {
-    // `input` can be a selector or a number.
-
-    var uft = this,
-        s = uft.settings,
-        $group = uft.getGroup(input),
-        turningOn = !uft.isOn($group);
-
-    console.log(turningOn, $group);
-
-    if (turningOn)
-      uft.turnOn($group);
-
-    // If settings say so, don't allow the last turned-on
-    // group to turn off.
-    else if (s.allOff || (!s.allOff && uft.onCount > 1))
-      uft.turnOff($group);
-
-    // If outsideTurnsOff, enable it.
-    if (s.outsideTurnsOff)
-      uft.outsideTurnsOff($group, turningOn);
-  },
 
   isOn: function($el) {
     // Check if an element is on.
@@ -156,6 +115,72 @@ UnfinishedToggler.prototype = {
     setTimeout(function() {
       uft.data.isDebouncing = false;
     }, 200);
+  },
+
+
+  /*============================
+  CORE FUNCTIONS
+  ==============================*/
+
+  enable: function() {
+    var uft = this,
+        s = uft.settings;
+
+    // Bind triggers.
+    uft.$triggers.on(uft.nmEvents, function(e) {
+      if (!uft.data.isDebouncing) {
+        uft.data.isDebouncing = true;
+        e.preventDefault();
+        uft.trigger.call(uft, this);
+      }
+    });
+
+    // Bind next and prev, if they exist.
+    if (s.nextSelector) {
+      $(s.nextSelector).on(uft.namespaceEvent('click'), function(e) {
+        e.preventDefault();
+        uft.next.call(uft, this);
+      });
+    }
+    if (s.prevSelector) {
+      $(s.prevSelector).on(uft.namespaceEvent('click'), function(e) {
+        e.preventDefault();
+        uft.prev.call(uft, this);
+      });
+    }
+  },
+
+  disable: function() {
+    var s = this.settings;
+    // Unbind triggers.
+    this.$triggers.off(uft.namespaceEvent(''));
+    if (s.nextSelector)
+      $(s.nextSelector).off(uft.namespaceEvent(''));
+    if (s.prevSelector)
+      $(s.prevSelector).off(uft.namespaceEvent(''));
+  },
+
+  trigger: function(input) {
+    // `input` can be a selector or a number.
+
+    var uft = this,
+        s = uft.settings,
+        $group = uft.getGroup(input),
+        turningOn = !uft.isOn($group);
+
+    console.log(turningOn, $group);
+
+    if (turningOn)
+      uft.turnOn($group);
+
+    // If settings say so, don't allow the last turned-on
+    // group to turn off.
+    else if (s.allOff || (!s.allOff && uft.onCount > 1))
+      uft.turnOff($group);
+
+    // If outsideTurnsOff, enable it.
+    if (s.outsideTurnsOff)
+      uft.outsideTurnsOff($group, turningOn);
   },
 
   turnOn: function($group) {
@@ -238,16 +263,6 @@ UnfinishedToggler.prototype = {
       // If $group is empty, just call the callback.
       cb();
     }
-  },
-
-  disable: function() {
-    var s = this.settings;
-    // Unbind triggers.
-    this.$triggers.off(uft.namespaceEvent(''));
-    if (s.nextSelector)
-      $(s.nextSelector).off(uft.namespaceEvent(''));
-    if (s.prevSelector)
-      $(s.prevSelector).off(uft.namespaceEvent(''));
   },
 
   turnAllOn: function() {
