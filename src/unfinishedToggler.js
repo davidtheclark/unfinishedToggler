@@ -117,6 +117,13 @@ UnfinishedToggler.prototype = {
     }, 200);
   },
 
+  optionalDelay: function(delay, func) {
+    if (delay > 0)
+      window.setTimeout(func, delay);
+    else
+      func();
+  },
+
 
   /*============================
   CORE FUNCTIONS
@@ -217,7 +224,7 @@ UnfinishedToggler.prototype = {
       $group.removeClass(s.offClass)
         .addClass(s.onClass);
       // After specified delay, add transClass.
-      uft.utils.optionalDelay(s.onTransDelay, function() {
+      uft.optionalDelay(s.onTransDelay, function() {
         $group.addClass(s.transClass);
       });
       // Call user-defined callback, passing some data.
@@ -242,7 +249,7 @@ UnfinishedToggler.prototype = {
       $group.removeClass(s.transClass)
         .addClass(offTransClass);
 
-      uft.utils.optionalDelay(s.offTransTime, function() {
+      uft.optionalDelay(s.offTransTime, function() {
         // After the specificied delay, do the rest.
         cb();
         $group.removeClass(s.onClass)
@@ -422,15 +429,10 @@ UnfinishedToggler.prototype = {
   }
 };
 
-UnfinishedToggler.prototype.utils = {
-  // Utils are generic functions required by but not specific to UFT.
-  optionalDelay: function(delay, func) {
-    if (delay > 0)
-      window.setTimeout(func, delay);
-    else
-      func();
-  }
-};
+
+/*============================
+DEFAULT SETTINGS
+==============================*/
 
 UnfinishedToggler.prototype.defaults = {
   // selector for a context-element containing all the others,
