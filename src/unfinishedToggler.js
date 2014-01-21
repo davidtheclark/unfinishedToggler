@@ -64,7 +64,9 @@ UnfinishedToggler.prototype = {
     // Enable innerFocus, if settings say to do that.
     if (s.innerFocus) {
       uft.$root.find(s.innerFocus).on('focus', function(e) {
-        uft.innerFocus.call(uft, e);
+        if (!uft.data.isDebouncing)
+          uft.data.isDebouncing = true;
+          uft.innerFocus.call(uft, e);
       });
     }
   },
@@ -313,14 +315,14 @@ UnfinishedToggler.prototype = {
 
   getScrollbarSize: function() {
     // Thanks to code from MagnificPopup
-    if(this.scrollbarSize === undefined) {
+    if(this.data.scrollbarSize === undefined) {
       var scrollDiv = document.createElement("div");
       scrollDiv.style.cssText = 'width: 99px; height: 99px; overflow: scroll; position: absolute; top: -9999px;';
       document.body.appendChild(scrollDiv);
-      this.scrollbarSize = scrollDiv.offsetWidth - scrollDiv.clientWidth;
+      this.data.scrollbarSize = scrollDiv.offsetWidth - scrollDiv.clientWidth;
       document.body.removeChild(scrollDiv);
     }
-    return this.scrollbarSize;
+    return this.data.scrollbarSize;
   },
 
   hasScrollbar: function() {
