@@ -70,7 +70,7 @@ var popup = new UnfinishedToggler({
   groupSelector: '.popup-g',
   onClass: 'popup-on',
   offClass: 'popup-off',
-  event: 'click focus',
+  events: ['click', 'focus'],
   outsideTurnsOff: true,
   startOff: true
 });

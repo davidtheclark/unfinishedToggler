@@ -48,7 +48,7 @@ $nav-i-y: 4em;
     transition: opacity 0.3s linear;
     opacity: 0;
   }
-  &.is-inactive > .subnav {
+  &:not(.is-active) > .subnav {
     @extend .hide-visually;
   }
   &.is-active {
