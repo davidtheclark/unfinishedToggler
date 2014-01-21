@@ -1,14 +1,8 @@
 function UnfinishedToggler(options) {
 
-  var uft = this;
-  var s = uft.settings = $.extend({}, uft.defaults, options);
-  // onCount should indicate the number of groups
-  // currently turned on.
+  var uft = this,
+  s = uft.settings = $.extend({}, uft.defaults, options);
   uft.onCount = 0;
-  uft.onClass = s.onClass;
-  uft.offClass = s.offClass;
-  uft.transOnClass = uft.onClass + '-trans';
-  uft.transOffClass = uft.offClass + '-trans';
   uft.$root = $(s.root);
   uft.$triggers = uft.$root.find(s.triggerSelector);
   uft.$contents = uft.$root.find(s.contentSelector);
@@ -23,7 +17,6 @@ function UnfinishedToggler(options) {
   };
 
   uft.init();
-
 }
 
 UnfinishedToggler.prototype = {
@@ -34,20 +27,10 @@ UnfinishedToggler.prototype = {
 
     uft.enable();
 
-    // Turn off all items, if settings say to do that.
-    if (s.startOff)
-      uft.turnAllOff();
-
-    // If there is an initialTrigger to trigger, do it.
-    // But if initialTrigger is 'first', pass it along.
-    if (s.initialTrigger && s.initialTrigger !== 'first')
-      uft.trigger(s.initialTrigger);
-
-    // Otherwise, if no initialTrigger but allOff is not allowed
-    // and nothing is turned on in the markup,
-    // or initialTrigger is 'first',
+    // If nothing is turned on in the markup,
+    // but settings say all cannot be off,
     // trigger the first trigger with the first event.
-    else if ((!s.allOff && !uft.getOnItems().length) || s.initialTrigger === 'first')
+    if ((!s.allOff && !uft.getOnItems().length))
       uft.$triggers.first().trigger(s.event.split(' ')[0]);
 
     // NEXT AND PREV
@@ -120,7 +103,7 @@ UnfinishedToggler.prototype = {
 
   isOn: function($el) {
     // Check if an element is on.
-    return $el.hasClass(this.onClass);
+    return $el.hasClass(this.settings.onClass);
   },
 
   getGroupById: function(id) {
@@ -129,7 +112,7 @@ UnfinishedToggler.prototype = {
 
   getOnItems: function() {
     // Get all relevant elements marked by the onClass.
-    return this.$items.filter('.' + this.onClass);
+    return this.$items.filter('.' + this.settings.onClass);
   },
 
   transitionDone: function() {
@@ -181,8 +164,8 @@ UnfinishedToggler.prototype = {
       uft.freezeScrollOn();
 
     function doTheTurningOn() {
-      $group.removeClass(uft.offClass)
-        .addClass(uft.onClass);
+      $group.removeClass(s.offClass)
+        .addClass(s.onClass);
 
       // After a delay (40ms by default in case the on/off switch
       // does something with `display`) add the transition class.
@@ -211,8 +194,8 @@ UnfinishedToggler.prototype = {
         cb();
         // Then remove it, and toggle on/off classes,
         // after the transition delay.
-        $group.removeClass(uft.onClass)
-          .addClass(uft.offClass);
+        $group.removeClass(s.onClass)
+          .addClass(s.offClass);
         // Call user-defined callback, passing some data.
         s.offCallback({ '$group': $group, 'action': 'off'});
         uft.onCount--;
@@ -416,10 +399,6 @@ UnfinishedToggler.prototype.defaults = {
   'onlyOneOn' : true,
   // all items can be off at the same time
   'allOff' : true,
-  // start by turning off all items
-  'startOff': false,
-  // a selector for a trigger to trigger right away
-  'initialTrigger' : false,
   // the event(s) that triggers a change
   'event': 'click',
   // a callback to perform after instance is turned on
