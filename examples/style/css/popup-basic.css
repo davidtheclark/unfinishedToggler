@@ -16,7 +16,6 @@
   background: #eeeeee;
   margin-top: 0.75em;
 }
-
 .popup-content:before {
   content: "";
   border-width: 0.75em;

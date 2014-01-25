@@ -441,8 +441,8 @@ UnfinishedToggler.prototype.defaults = {
   'onClass': 'uft-on',
   // class to turn groups and elements off
   'offClass': 'uft-off',
-  // `scattered` is true if the triggers and content
-  // are not children of group-containing elements.
+  // `scattered` is true if related triggers and content
+  // are not children of the same group-containing elements.
   // scattered groups are identified by data-uft-group attributes.
   'scattered': false,
   // selector for trigger elements
@@ -457,7 +457,7 @@ UnfinishedToggler.prototype.defaults = {
   'onlyOneOn' : true,
   // allow all items to be turned off at the same time
   'allOff' : true,
-  // array of events that trigger a toggle
+  // array of events that the triggers will listen for
   'events': ['click'],
   // namespace for uft-related events
   'eventNamespace': 'uft',
@@ -500,5 +500,4 @@ UnfinishedToggler.prototype.defaults = {
   // or selector for the region in which you are welcome to
   // click without turning off the group
   'outsideTurnsOff': false
-
 };
