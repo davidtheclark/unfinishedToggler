@@ -4,7 +4,7 @@ A simple but unusual jQuery plugin to ease the process of creating custom-design
 
 The UnfinishedToggler is "simple" because it simply toggles elements and groups of elements "on" or "off" in various ways, according to the rules you pass it. In fact, this is all that happens with most UI components (e.g. accordions, tabs, popups, modals, dropdowns): certain events make certain elements or groups of elements turn "on" or "off", according to some pattern, some set of rules. What makes an "accordion" different from a "popup" is just (a) the styling and (b) the rules that govern how the parts toggle.
 
-The UnfinishedToggler is "unusual" because it does not give you any out-of-the-box, pre-styled UI components. It's not a drop-in solution: it is a tool that might help you build your own stuff faster, rather than a thing that is already built. It assumes that you're going to want to style your own component in your own way; all it's going to do is provide a little framework for the component's requisite JavaScript, into which you pass the particular rules that define your component's toggling behavior.
+The UnfinishedToggler is "unusual" because it does not give you any out-of-the-box, pre-styled UI components. It's not a drop-in solution: it is a tool that might help you build your own stuff faster, rather than a pre-made thing that you can insert into your site with no further effort. It assumes that you're going to want to style your own component in your own way; all it's going to do is provide a little framework for the component's requisite JavaScript, into which you pass the particular rules that define your component's toggling behavior.
 
 For instance:
 
@@ -12,7 +12,7 @@ What is a UI "accordion"? A set of sub-groups, each group consisting of a trigge
 
 Tabs are essentially the same, but usually with a different visual style and  a couple of consistent rules: With tabs, typically, only one trigger/content group can be on at a time, and one *must* always be on, so you can't turn a group off except by turning another on. Most of the other variations mentioned above for accordions also relate to tabs.
 
-SO:
+So:
 
 With the Unfinished Toggler, you get most or all of the JavaScript you'll need for your UI component by designating (a) which elements constitute its groups, and (b) which rules and patterns define the component's behavior. Then you write some CSS to differentiate the "on" and "off" states, a little different every time.
 
@@ -61,7 +61,7 @@ UnfinishedToggler.prototype.defaults = {
   // delay between removing `transClass` and turning off
   'offTransTime': 0,
   // `transOverlap` is true if groups are allowed to
-  // tranisiong on while others are still transitioning off
+  // transition on while others are still transitioning off
   'transOverlap': true,
 
   // NEXT AND PREV
@@ -77,14 +77,15 @@ UnfinishedToggler.prototype.defaults = {
 
   // INNER FOCUS
   // selector for elements within groups that if focused
-  // will trigger their containing group
+  // will turn on their containing group
   'innerFocus': false,
 
   // OUTSIDE TURNS OFF
   // either `true`, to indicate that clicking anywhere
   // outside the turned-on group should turn it off,
   // or selector for the region in which you are welcome to
-  // click without turning off the group
+  // click without turning off the group (clicks outside that
+  // region will turn it off)
   'outsideTurnsOff': false
 };
 ```

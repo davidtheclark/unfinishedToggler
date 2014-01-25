@@ -475,7 +475,7 @@ UnfinishedToggler.prototype.defaults = {
   // delay between removing `transClass` and turning off
   'offTransTime': 0,
   // `transOverlap` is true if groups are allowed to
-  // tranisiong on while others are still transitioning off
+  // transition on while others are still transitioning off
   'transOverlap': true,
 
   // NEXT AND PREV
@@ -491,13 +491,14 @@ UnfinishedToggler.prototype.defaults = {
 
   // INNER FOCUS
   // selector for elements within groups that if focused
-  // will trigger their containing group
+  // will turn on their containing group
   'innerFocus': false,
 
   // OUTSIDE TURNS OFF
   // either `true`, to indicate that clicking anywhere
   // outside the turned-on group should turn it off,
   // or selector for the region in which you are welcome to
-  // click without turning off the group
+  // click without turning off the group (clicks outside that
+  // region will turn it off)
   'outsideTurnsOff': false
 };
