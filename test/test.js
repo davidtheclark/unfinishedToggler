@@ -16,13 +16,16 @@ $(document).keyup(function(e) {
 
 var carousel = new UnfinishedToggler({
   root: '#carousel',
-  contentSelector: '.carousel-i',
+  onClass: 'is-on',
+  offClass: 'is-off',
+  transClass: 'is-trans',
+  contentSelector: '.carousel-content',
   triggerSelector: '.carousel-tracker',
   nextSelector: '#carousel-next',
   prevSelector: '#carousel-prev',
   allOff: false,
   scattered: true,
-  offTransTime: 400
+  offTransTime: 300
 });
 
 var input = new UnfinishedToggler({

@@ -28,7 +28,7 @@ body {
   overflow: hidden;
 }
 
-.carousel-i {
+.carousel-content {
   position: absolute;
   top: 0;
   left: 0;
@@ -36,40 +36,29 @@ body {
   bottom: 0;
   font-size: 7em;
   font-weight: bold;
-  -webkit-transition: -webkit-transform 0.4s linear;
-  transition: transform 0.4s linear;
   display: none;
-  -webkit-transform: translateX(100%);
-  -ms-transform: translateX(100%);
-  transform: translateX(100%);
 }
 
-.carousel-i.uft-on {
+.carousel-content.is-on {
   display: block;
+  opacity: 0;
+  -webkit-transition: opacity 0.3s linear;
+  transition: opacity 0.3s linear;
 }
 
-.carousel-i.uft-on.uft-trans {
-  -webkit-transform: translateX(0);
-  -ms-transform: translateX(0);
-  transform: translateX(0);
+.carousel-content.is-on.is-trans {
+  opacity: 1;
 }
 
-.carousel-i.uft-on.uft-trans-off {
-  -webkit-transform: translateX(-100%);
-  -ms-transform: translateX(-100%);
-  transform: translateX(-100%);
-  z-index: 3;
-}
-
-.carousel-i.m-1 {
+.carousel-content.m-1 {
   background: gray;
 }
 
-.carousel-i.m-2 {
+.carousel-content.m-2 {
   background: blue;
 }
 
-.carousel-i.m-3 {
+.carousel-content.m-3 {
   background: red;
 }
 
@@ -112,7 +101,7 @@ body {
   transition: all 0.5s linear;
 }
 
-.carousel-tracker:not(.uft-off-trans).uft-on {
+.carousel-tracker.is-on {
   background: white;
   color: black;
 }

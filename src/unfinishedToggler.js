@@ -157,13 +157,14 @@ UnfinishedToggler.prototype = {
   },
 
   disable: function() {
-    var s = this.settings;
+    var s = this.settings,
+        nmsp = '.' + s.eventNamespace;
     // Unbind all triggers.
-    this.$triggers.off(uft.namespaceEvent(''));
+    this.$triggers.off(nmsp);
     if (s.nextSelector)
-      $(s.nextSelector).off(uft.namespaceEvent(''));
+      $(s.nextSelector).off(nmsp);
     if (s.prevSelector)
-      $(s.prevSelector).off(uft.namespaceEvent(''));
+      $(s.prevSelector).off(nmsp);
   },
 
   trigger: function(input) {

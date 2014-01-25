@@ -4,7 +4,7 @@
   overflow: hidden;
 }
 
-.carousel-i {
+.carousel-content {
   position: absolute;
   top: 0;
   left: 0;
@@ -13,17 +13,13 @@
   font-size: 7em;
   font-weight: bold;
 
-  transition: transform 0.4s linear;
   display: none;
-  transform: translateX(100%);
-  &.uft-on {
+  &.is-on {
     display: block;
-    &.uft-trans {
-      transform: translateX(0);
-    }
-    &.uft-trans-off {
-      transform: translateX(-100%);
-      z-index: 3;
+    opacity: 0;
+    transition: opacity 0.3s linear;
+    &.is-trans {
+      opacity: 1;
     }
   }
 
@@ -71,7 +67,7 @@
   color: white;
   border-radius: 5px;
   transition: all 0.5s linear;
-  &:not(.uft-off-trans).uft-on {
+  &.is-on {
     background: white;
     color: black;
   }
