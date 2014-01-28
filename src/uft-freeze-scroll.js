@@ -49,14 +49,14 @@ $.extend(UnfinishedToggler.prototype, {
 });
 
 // Register `turnOn` functionality.
-UnfinishedToggler.prototype.registerHook('turnOn', function($group, turningOn) {
+UnfinishedToggler.prototype.registerHook('turnOn', function() {
   // If `freezeScroll` is set, turn it on now.
   if (this.settings.freezeScroll)
     this.freezeScrollOn();
 });
 
 // Register `turnOff` functionality.
-UnfinishedToggler.prototype.registerHook('turnOff', function($group, turningOn) {
+UnfinishedToggler.prototype.registerHook('turnOff', function() {
   // If the scroll was frozen, unfreeze it.
   if (this.settings.freezeScroll)
     this.freezeScrollOff();
