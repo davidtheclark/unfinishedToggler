@@ -5,7 +5,22 @@ UnfinishedToggler.prototype.registerDefault({
   'innerFocus': false
 });
 
-// Register init.
+// What it does.
+UnfinishedToggler.prototype.innerFocus = function(e) {
+  // Find the focus-target's group, and trigger it.
+  var uft = this,
+      s = uft.settings,
+      $el = $(e.target),
+      $groupPart = (!s.scattered) ? $el : $el.closest(s.contentSelector),
+      groupIsOn = uft.isOn(uft.getGroup($groupPart));
+
+  if (!groupIsOn)
+    uft.triggerGroup($groupPart);
+  else
+    uft.debounceDone();
+};
+
+// Register `init` functionality.
 UnfinishedToggler.prototype.registerHook('init', function() {
   var uft = this,
       s = uft.settings;

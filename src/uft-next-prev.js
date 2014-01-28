@@ -6,6 +6,42 @@ UnfinishedToggler.prototype.registerDefault({
   'prevSelector': false
 });
 
+// What it does.
+$.extend(UnfinishedToggler.prototype, {
+  nextOrPrev: function(dir) {
+    var uft = this,
+        s = uft.settings,
+        nextPrevErrorStart = 'UnfinishedToggler cannot use next() and prev() ',
+        currentGroup, firstGroup, lastGroup, targetGroup;
+
+    // First, check that next() or prev() make sense with the settings and markup.
+    if (!s.onlyOneOn)
+      throw new Error(nextPrevErrorStart + 'with the setting {onlyOneOn: false}.');
+
+    currentGroup = uft.getOnItems().first().data('uft-group');
+    if (typeof currentGroup === 'undefined')
+      throw new Error(nextPrevErrorStart + 'unless data-uft-group values are defined.');
+    else if (typeof currentGroup !== 'number')
+      throw new Error(nextPrevErrorStart + 'unless data-uft-group values are integers.');
+
+    firstGroup = Math.min.apply(Math, uft.groupIds);
+    lastGroup = Math.max.apply(Math, uft.groupIds);
+    if (dir === 'next')
+      targetGroup = (currentGroup + 1 <= lastGroup) ? currentGroup + 1 : firstGroup;
+    else
+      targetGroup = (currentGroup - 1 >= firstGroup) ? currentGroup - 1 : lastGroup;
+    uft.triggerGroup(targetGroup);
+  },
+
+  // next() and prev() are just public-facing methods.
+  next: function() {
+    this.nextOrPrev('next');
+  },
+  prev: function() {
+    this.nextOrPrev('prev');
+  }
+});
+
 // Register `init` functionality.
 UnfinishedToggler.prototype.registerHook('init', function() {
   var uft = this;
@@ -45,5 +81,3 @@ UnfinishedToggler.prototype.registerHook('disable', function() {
   if (s.prevSelector)
     $(s.prevSelector).off(this.namespaceEvent());
 });
-
-

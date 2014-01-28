@@ -9,7 +9,7 @@ function UnfinishedToggler(options) {
 DEFAULT SETTINGS
 ==============================*/
 
-$.extend(UnfinishedToggler.prototype, {
+UnfinishedToggler.prototype = {
 
   defaults: {
     // selector for a context-element containing all the others,
@@ -61,16 +61,11 @@ $.extend(UnfinishedToggler.prototype, {
     // `newDefaults` is an object containing new
     // defaults from a plugin.
     $.extend(this.defaults, newDefaults);
-  }
+  },
 
-});
-
-
-/*============================
-HOOKS
-==============================*/
-
-$.extend(UnfinishedToggler.prototype, {
+  /*============================
+  HOOKS
+  ==============================*/
 
   hooks: {
     // Run right away.
@@ -78,79 +73,80 @@ $.extend(UnfinishedToggler.prototype, {
     // Bind triggers that enable the functionality to work.
     enable: [],
     // Unbind those triggers, so functionality does not work.
-    disable: []
+    disable: [],
+    // Run as part of `triggerGroup`
+    trigger: [],
+    // Run as part of `turnOn`
+    turnOn: [],
+    // Run as part of `turnOff`
+    turnOff: []
   },
 
   registerHook: function(hook, fn) {
     this.hooks[hook].push(fn);
   },
 
-  execHook: function(hook) {
+  execHook: function(hook, args) {
     var fns = this.hooks[hook];
+    args = args || [];
     for (var i=0,l=fns.length;i<l;i++) {
       // Hook functions receive the instance as `this`.
-      fns[i].call(this, null);
+      fns[i].apply(this, args);
     }
-  }
+  },
 
-});
+  /*============================
+  INITIALIZATION
+  ==============================*/
 
-/*============================
-INITIALIZATION
-==============================*/
+  init: function() {
+    // Core functionality.
+    var uft = this,
+        s = uft.settings;
 
-// Register core functionality for `init` hook.
-UnfinishedToggler.prototype.registerHook('init', function() {
-  var uft = this,
-      s = uft.settings;
+    uft.onCount = 0;
+    uft.$root = $(s.root);
+    uft.$triggers = uft.$root.find(s.triggerSelector);
+    // `$items` contains the elements whose on and off state will
+    // be toggled. If `scattered` is false, `$items` only
+    // includes the group-container items; if `scattered` is
+    // true, `$items` includes triggers and contents.
+    uft.$items = (!s.scattered) ? uft.$root.find(s.groupSelector)
+                                : uft.$triggers.add(uft.$root.find(s.contentSelector));
 
-  uft.onCount = 0;
-  uft.$root = $(s.root);
-  uft.$triggers = uft.$root.find(s.triggerSelector);
-  // `$items` contains the elements whose on and off state will
-  // be toggled. If `scattered` is false, `$items` only
-  // includes the group-container items; if `scattered` is
-  // true, `$items` includes triggers and contents.
-  uft.$items = (!s.scattered) ? uft.$root.find(s.groupSelector)
-                              : uft.$triggers.add(uft.$root.find(s.contentSelector));
+    uft.data = {
+      // `isDebouncing` is used to ensure that toggling
+      // doesn't overlap already-toggling-toggling.
+      isDebouncing: false
+    };
 
-  uft.data = {
-    // `isDebouncing` is used to ensure that toggling
-    // doesn't overlap already-toggling-toggling.
-    isDebouncing: false
-  };
+    // `nmEvents` is a namespaced version of the triggering event(s).
+    uft.nmEvents = $.map(s.events, function(ev) {
+      return uft.namespaceEvent(ev);
+    }).join(' ');
 
-  // `nmEvents` is a namespaced version of the triggering event(s).
-  uft.nmEvents = $.map(s.events, function(ev) {
-    return uft.namespaceEvent(ev);
-  }).join(' ');
+    // Enable!
+    uft.enable();
 
-  // Enable!
-  uft.enable();
+    // If nothing is turned on in the markup,
+    // but settings say all cannot be off,
+    // trigger the first trigger with the first event.
+    if ((!s.allOff && !uft.getOnItems().length))
+      uft.$triggers.first().trigger(uft.nmEvents.split(' ')[0]);
 
-  // If nothing is turned on in the markup,
-  // but settings say all cannot be off,
-  // trigger the first trigger with the first event.
-  if ((!s.allOff && !uft.getOnItems().length))
-    uft.$triggers.first().trigger(uft.nmEvents.split(' ')[0]);
-});
-
-// `.init()` executes the 'init' hook, nothing more.
-UnfinishedToggler.prototype.init = function() {
-  this.execHook('init');
-};
+    // Call hooks from plugins.
+    uft.execHook('init');
+  },
 
 
-/*============================
-LITTLE CORE UTILITYS
-==============================*/
-
-$.extend(UnfinishedToggler.prototype, {
+  /*============================
+  LITTLE CORE UTILITIES
+  ==============================*/
 
   namespaceEvent: function(eventName) {
     // Just add a namespace to an event.
-    var ev = eventName || '';
-    return ev + '.' + this.settings.eventNamespace;
+    eventName = eventName || '';
+    return eventName + '.' + this.settings.eventNamespace;
   },
 
   isOn: function($el) {
@@ -200,45 +196,38 @@ $.extend(UnfinishedToggler.prototype, {
       window.setTimeout(func, delay);
     else
       func();
-  }
-});
+  },
 
-
-/*============================
-CORE FUNCTIONALITY
-==============================*/
-
-// Register core functionality for `enable` hook.
-UnfinishedToggler.prototype.registerHook('enable', function() {
-  var uft = this;
-
-  // Bind triggers.
-  uft.$triggers.on(uft.nmEvents, function(e) {
-    if (!uft.data.isDebouncing) {
-      uft.data.isDebouncing = true;
-      uft.trigger.call(uft, this);
-    }
-  });
-});
-
-// Register core functionality for `disable` hook.
-UnfinishedToggler.prototype.registerHook('disable', function() {
-  this.$triggers.off(this.namespaceEvent());
-});
-
-$.extend(UnfinishedToggler.prototype, {
+  /*============================
+  CORE FUNCTIONALITY
+  ==============================*/
 
   enable: function() {
+    // Core functionality.
+    var uft = this;
+    uft.$triggers.on(uft.nmEvents, function(e) {
+      if (!uft.data.isDebouncing) {
+        uft.data.isDebouncing = true;
+        uft.triggerGroup.call(uft, this);
+      }
+    });
+
+    // Call hooks from plugins.
     this.execHook('enable');
   },
 
   disable: function() {
+    // Core functionality.
+    this.$triggers.off(this.namespaceEvent());
+
+    // Call hooks from plugins.
     this.execHook('disable');
   },
 
-  trigger: function(input) {
+  triggerGroup: function(input) {
     // `input` can be a selector or a number.
 
+    // Core functionality.
     var uft = this,
         s = uft.settings,
         $group = uft.getGroup(input),
@@ -254,9 +243,8 @@ $.extend(UnfinishedToggler.prototype, {
     else if (s.allOff || (!s.allOff && uft.onCount > 1))
       uft.turnOff($group);
 
-    // If outsideTurnsOff, trigger it.
-    if (s.outsideTurnsOff)
-      uft.outsideTurnsOff($group, turningOn);
+    // Call hooks from plugins.
+    uft.execHook('trigger', [$group, turningOn]);
   },
 
   turnOn: function($group) {
@@ -283,10 +271,6 @@ $.extend(UnfinishedToggler.prototype, {
       doTheTurningOn();
     }
 
-    // If `freezeScroll` is set, turn it on now.
-    if (s.freezeScroll)
-      uft.freezeScrollOn();
-
     function doTheTurningOn() {
       // Remove `offClass`, add `onClass`.
       $group.removeClass(s.offClass)
@@ -301,14 +285,18 @@ $.extend(UnfinishedToggler.prototype, {
       uft.onCount++;
       // Open the gates again.
       uft.debounceDone();
+
+      // Run the hooks.
+      uft.execHook('turnOn');
     }
   },
 
   turnOff: function($group, callback) {
     var uft = this,
         s = uft.settings,
-        cb = callback || function(){},
         offTransClass = s.transClass + '-off';
+
+    callback = callback || function(){};
 
     if ($group.length) {
 
@@ -319,7 +307,6 @@ $.extend(UnfinishedToggler.prototype, {
 
       uft.optionalDelay(s.offTransTime, function() {
         // After the specificied delay, finish switching up classes.
-        cb();
         $group.removeClass(s.onClass)
           .removeClass(offTransClass)
           .addClass(s.offClass);
@@ -330,14 +317,14 @@ $.extend(UnfinishedToggler.prototype, {
         // Open the gates again.
         uft.debounceDone();
 
-        // If the scroll was frozen, unfreeze it.
-        if (s.freezeScroll)
-          uft.freezeScrollOff();
+        callback();
+        // Run the hook.
+        uft.execHook('turnOff');
       });
 
     // If `$group` is empty, just call the callback.
     } else {
-      cb();
+      callback();
     }
   },
 
@@ -355,145 +342,6 @@ $.extend(UnfinishedToggler.prototype, {
       this.turnOff(this.$items);
     else
       throw new Error('UnfinishedToggler will not turnAllOff with the setting {allOff: true}.');
-  },
-
-
-  /*============================
-  NEXT AND PREVIOUS
-  ==============================*/
-
-  nextOrPrev: function(dir) {
-    var uft = this,
-        s = uft.settings,
-        nextPrevErrorStart = 'UnfinishedToggler cannot use next() and prev() ',
-        currentGroup, firstGroup, lastGroup, targetGroup;
-
-    // First, check that next() or prev() make sense with the settings and markup.
-    if (!s.onlyOneOn)
-      throw new Error(nextPrevErrorStart + 'with the setting {onlyOneOn: false}.');
-
-    currentGroup = uft.getOnItems().first().data('uft-group');
-    if (typeof currentGroup === 'undefined')
-      throw new Error(nextPrevErrorStart + 'unless data-uft-group values are defined.');
-    else if (typeof currentGroup !== 'number')
-      throw new Error(nextPrevErrorStart + 'unless data-uft-group values are integers.');
-
-    firstGroup = Math.min.apply(Math, uft.groupIds);
-    lastGroup = Math.max.apply(Math, uft.groupIds);
-    if (dir === 'next')
-      targetGroup = (currentGroup + 1 <= lastGroup) ? currentGroup + 1 : firstGroup;
-    else
-      targetGroup = (currentGroup - 1 >= firstGroup) ? currentGroup - 1 : lastGroup;
-    uft.trigger(targetGroup);
-  },
-
-  // next() and prev() are just public-facing methods.
-  next: function() {
-    this.nextOrPrev('next');
-  },
-  prev: function() {
-    this.nextOrPrev('prev');
-  },
-
-
-  /*============================
-  FREEZE SCROLL
-  ==============================*/
-
-  freezeScrollOn: function() {
-    var uft = this,
-        rootStyles = { overflow: 'hidden' };
-    // If there is a scrollbar
-    if (uft.hasScrollbar) {
-      // ... get its size
-      var scrollbarSize = uft.getScrollbarSize();
-      // ... and if there's any size, offset right margin to account.
-      if (scrollbarSize)
-        rootStyles['margin-right'] = scrollbarSize;
-    }
-    $('html').css(rootStyles);
-  },
-
-  freezeScrollOff: function() {
-    $('html').css({ 'overflow': '', 'margin-right': '' });
-  },
-
-  getScrollbarSize: function() {
-    // Thanks to code from MagnificPopup.
-    if(this.data.scrollbarSize === undefined) {
-      var scrollDiv = document.createElement("div");
-      scrollDiv.style.cssText = 'width: 99px; height: 99px; overflow: scroll; position: absolute; top: -9999px;';
-      document.body.appendChild(scrollDiv);
-      this.data.scrollbarSize = scrollDiv.offsetWidth - scrollDiv.clientWidth;
-      document.body.removeChild(scrollDiv);
-    }
-    return this.data.scrollbarSize;
-  },
-
-  hasScrollbar: function() {
-    return document.body.scrollHeight > $(window).height();
-  },
-
-
-  /*============================
-  INNER FOCUS
-  ==============================*/
-
-  innerFocus: function(e) {
-    // Find the focus-target's group, and trigger it.
-    var uft = this,
-        s = uft.settings,
-        $el = $(e.target),
-        $groupPart = (!s.scattered) ? $el : $el.closest(s.contentSelector),
-        groupIsOn = uft.isOn(uft.getGroup($groupPart));
-
-    if (!groupIsOn)
-      uft.trigger($groupPart);
-    else
-      uft.debounceDone();
-  },
-
-
-  /*============================
-  OUTSIDE TURNS OFF
-  ==============================*/
-
-  outsideTurnsOff: function($group, turningOn) {
-    var uft = this,
-        s = uft.settings,
-        // `touchend` event is necessary for iOS, it seems.
-        ev = uft.namespaceEvent('click') + ' ' + uft.namespaceEvent('touchend'),
-        $inside = (typeof s.outsideTurnsOff === 'string') ? $(s.outsideTurnsOff) : $group;
-
-    if (turningOn)
-      outsideEnable();
-    else
-      outsideDisable();
-
-    function outsideEnable() {
-      // Make it so that clicking anywhere outside `$inside`
-      // turns off `$group`.
-      $inside.on(ev, function(e) {
-        e.stopPropagation();
-      });
-      // Only allow the event once: it will get
-      // re-assigned if `$group` turns on again.
-      // Timeout ensures that assignment happens
-      // after the triggering event is done.
-      setTimeout(function() {
-        $('html').on(ev, outsideTriggered);
-      }, 40);
-    }
-
-    function outsideDisable() {
-      $('html').off(uft.namespaceEvent(''));
-    }
-
-    function outsideTriggered(e) {
-      if (!$inside.is($(e.target))) {
-        uft.turnOff($group);
-        outsideDisable();
-      }
-    }
   }
-});
+
+};
