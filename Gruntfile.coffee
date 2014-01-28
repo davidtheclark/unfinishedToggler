@@ -30,10 +30,21 @@ module.exports = (grunt) ->
         files:
           "test/test.css": "test/test.css"
 
+    concat:
+      dist:
+        src: [
+          "src/uft-core.js"
+          "src/uft-freeze-scroll.js"
+          "src/uft-inner-focus.js"
+          "src/uft-next-prev.js"
+          "src/uft-outside-turns-off.js"
+        ]
+        dest: "dist/unfinishedToggler.js"
+
     uglify:
       dist:
         files:
-          "unfinishedToggler.min.js": "unfinishedToggler.js"
+          "dist/unfinishedToggler.min.js": "<%= concat.dist.dest %>"
 
     assemble:
       examples:
@@ -64,6 +75,9 @@ module.exports = (grunt) ->
           "test/*.{html,css,js}"
           "src/*.js"
         ]
+      js:
+        files: ["src/*.js"]
+        tasks: ["build"]
       examplesSass:
         files: [
           "scss/*.scss"
@@ -80,6 +94,7 @@ module.exports = (grunt) ->
   grunt.loadNpmTasks "grunt-contrib-connect"
   grunt.loadNpmTasks "grunt-contrib-watch"
   grunt.loadNpmTasks "grunt-contrib-sass"
+  grunt.loadNpmTasks "grunt-contrib-concat"
   grunt.loadNpmTasks "grunt-contrib-uglify"
   grunt.loadNpmTasks "grunt-autoprefixer"
   grunt.loadNpmTasks "grunt-newer"
@@ -96,4 +111,8 @@ module.exports = (grunt) ->
   grunt.registerTask "dev", [
     "connect"
     "watch"
+  ]
+  grunt.registerTask "build", [
+    "concat:dist"
+    "uglify:dist"
   ]

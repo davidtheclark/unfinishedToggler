@@ -1,3 +1,7 @@
+/**
+ * The Unfinished Toggler: Freeze Scroll
+ */
+
 // Register defaults.
 UnfinishedToggler.prototype.registerDefault({
   // freeze scrolling when a group is turned on;

@@ -1,3 +1,7 @@
+/**
+ * The Unfinished Toggler: Outside Turns Off
+ */
+
 // Register defaults.
 UnfinishedToggler.prototype.registerDefault({
   // either `true`, to indicate that clicking anywhere

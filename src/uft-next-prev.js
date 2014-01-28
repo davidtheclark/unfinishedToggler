@@ -1,3 +1,7 @@
+/**
+ * The Unfinished Toggler: Next-Prev
+ */
+
 // Register defaults.
 UnfinishedToggler.prototype.registerDefault({
   // selector for elements that will turn on the next group

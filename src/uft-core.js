@@ -1,13 +1,18 @@
+/**
+ * The Unfinished Toggler: Core
+ */
+
 function UnfinishedToggler(options) {
-  // Establish settings and initialize.
+  // Upon instantiation,
+  // establish settings and initialize.
   this.settings = $.extend({}, this.defaults, options);
   this.init();
 }
 
 
-/*============================
-DEFAULT SETTINGS
-==============================*/
+/**
+ * Default Settings
+ */
 
 UnfinishedToggler.prototype = {
 
@@ -63,22 +68,35 @@ UnfinishedToggler.prototype = {
     $.extend(this.defaults, newDefaults);
   },
 
-  /*============================
-  HOOKS
-  ==============================*/
+  /**
+   * HOOKS
+   * For UFT, "hooks" are points at which a plugin can
+   * insert a function. When `execHook()` is called,
+   * it will loop through and call all the functions
+   * that plugins have registered for that particular hook.
+   */
 
   hooks: {
-    // Run right away.
+    // `init` functions run once on instantiation.
     init: [],
-    // Bind triggers that enable the functionality to work.
+    // `enable` functions bind triggers that enable
+    // the instance to toggle.
     enable: [],
-    // Unbind those triggers, so functionality does not work.
+    // `disable` funcntions unbind those triggers,
+    // so the instance won't toggle until re-enabled.
     disable: [],
-    // Run as part of `triggerGroup`
+    // `trigger` functions run when a trigger is ... triggered.
+    // They will be passed
+    // (1) the `$group` that is triggered
+    // (2) a boolean value for whether the group is `turningOn`
     trigger: [],
-    // Run as part of `turnOn`
+    // `turnOn` functions run when a group is turned on.
+    // They will be passed
+    // (1) the `$group` that is turning on.
     turnOn: [],
-    // Run as part of `turnOff`
+    // `turnOff` functions run when a group is turned off.
+    // They will be passed
+    // (1) the `$group` that is turning off.
     turnOff: []
   },
 
@@ -90,58 +108,15 @@ UnfinishedToggler.prototype = {
     var fns = this.hooks[hook];
     args = args || [];
     for (var i=0,l=fns.length;i<l;i++) {
-      // Hook functions receive the instance as `this`.
+      // Hook functions receive the UFT instance as `this`.
       fns[i].apply(this, args);
     }
   },
 
-  /*============================
-  INITIALIZATION
-  ==============================*/
 
-  init: function() {
-    // Core functionality.
-    var uft = this,
-        s = uft.settings;
-
-    uft.onCount = 0;
-    uft.$root = $(s.root);
-    uft.$triggers = uft.$root.find(s.triggerSelector);
-    // `$items` contains the elements whose on and off state will
-    // be toggled. If `scattered` is false, `$items` only
-    // includes the group-container items; if `scattered` is
-    // true, `$items` includes triggers and contents.
-    uft.$items = (!s.scattered) ? uft.$root.find(s.groupSelector)
-                                : uft.$triggers.add(uft.$root.find(s.contentSelector));
-
-    uft.data = {
-      // `isDebouncing` is used to ensure that toggling
-      // doesn't overlap already-toggling-toggling.
-      isDebouncing: false
-    };
-
-    // `nmEvents` is a namespaced version of the triggering event(s).
-    uft.nmEvents = $.map(s.events, function(ev) {
-      return uft.namespaceEvent(ev);
-    }).join(' ');
-
-    // Enable!
-    uft.enable();
-
-    // If nothing is turned on in the markup,
-    // but settings say all cannot be off,
-    // trigger the first trigger with the first event.
-    if ((!s.allOff && !uft.getOnItems().length))
-      uft.$triggers.first().trigger(uft.nmEvents.split(' ')[0]);
-
-    // Call hooks from plugins.
-    uft.execHook('init');
-  },
-
-
-  /*============================
-  LITTLE CORE UTILITIES
-  ==============================*/
+  /**
+   * Core Utility Functions
+   */
 
   namespaceEvent: function(eventName) {
     // Just add a namespace to an event.
@@ -198,12 +173,61 @@ UnfinishedToggler.prototype = {
       func();
   },
 
-  /*============================
-  CORE FUNCTIONALITY
-  ==============================*/
+
+  /**
+   * Initialization
+   */
+
+  init: function() {
+    // Core functionality.
+    // ---------------------------
+    var uft = this,
+        s = uft.settings;
+
+    uft.onCount = 0;
+    uft.$root = $(s.root);
+    uft.$triggers = uft.$root.find(s.triggerSelector);
+    // `$items` contains the elements whose on and off state will
+    // be toggled. If `scattered` is false, `$items` only
+    // includes the group-container items; if `scattered` is
+    // true, `$items` includes triggers and contents.
+    uft.$items = (!s.scattered) ? uft.$root.find(s.groupSelector)
+                                : uft.$triggers.add(uft.$root.find(s.contentSelector));
+
+    uft.data = {
+      // `isDebouncing` is used to ensure that toggling
+      // doesn't overlap already-toggling-toggling.
+      isDebouncing: false
+    };
+
+    // `nmEvents` is a namespaced version of the triggering event(s).
+    uft.nmEvents = $.map(s.events, function(ev) {
+      return uft.namespaceEvent(ev);
+    }).join(' ');
+
+    // Enable!
+    uft.enable();
+
+    // If nothing is turned on in the markup,
+    // but settings say all cannot be off,
+    // trigger the first trigger with the first event.
+    if ((!s.allOff && !uft.getOnItems().length))
+      uft.$triggers.first().trigger(uft.nmEvents.split(' ')[0]);
+
+    // ---------------------------
+    // Execute hook.
+    // ---------------------------
+    uft.execHook('init');
+  },
+
+
+  /**
+   * Core Functionality
+   */
 
   enable: function() {
     // Core functionality.
+    // ---------------------------
     var uft = this;
     uft.$triggers.on(uft.nmEvents, function(e) {
       if (!uft.data.isDebouncing) {
@@ -212,15 +236,20 @@ UnfinishedToggler.prototype = {
       }
     });
 
-    // Call hooks from plugins.
+    // ---------------------------
+    // Execute hook.
+    // ---------------------------
     this.execHook('enable');
   },
 
   disable: function() {
     // Core functionality.
+    // ---------------------------
     this.$triggers.off(this.namespaceEvent());
 
-    // Call hooks from plugins.
+    // ---------------------------
+    // Execute hook.
+    // ---------------------------
     this.execHook('disable');
   },
 
@@ -228,6 +257,7 @@ UnfinishedToggler.prototype = {
     // `input` can be a selector or a number.
 
     // Core functionality.
+    // ---------------------------
     var uft = this,
         s = uft.settings,
         $group = uft.getGroup(input),
@@ -243,11 +273,15 @@ UnfinishedToggler.prototype = {
     else if (s.allOff || (!s.allOff && uft.onCount > 1))
       uft.turnOff($group);
 
-    // Call hooks from plugins.
+    // ---------------------------
+    // Execute hook.
+    // ---------------------------
     uft.execHook('trigger', [$group, turningOn]);
   },
 
   turnOn: function($group) {
+    // Core functionaliy
+    // ---------------------------
     var uft = this,
         s = uft.settings,
         $onItems;
@@ -286,12 +320,16 @@ UnfinishedToggler.prototype = {
       // Open the gates again.
       uft.debounceDone();
 
-      // Run the hooks.
-      uft.execHook('turnOn');
+      // ---------------------------
+      // Execute hook
+      // ---------------------------
+      uft.execHook('turnOn', [$group]);
     }
   },
 
   turnOff: function($group, callback) {
+    // Core functionality
+    // ---------------------------
     var uft = this,
         s = uft.settings,
         offTransClass = s.transClass + '-off';
@@ -318,8 +356,11 @@ UnfinishedToggler.prototype = {
         uft.debounceDone();
 
         callback();
-        // Run the hook.
-        uft.execHook('turnOff');
+
+        // ---------------------------
+        // Execute hook
+        // ---------------------------
+        uft.execHook('turnOff', [$group]);
       });
 
     // If `$group` is empty, just call the callback.

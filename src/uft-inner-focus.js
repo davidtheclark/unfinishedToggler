@@ -1,3 +1,7 @@
+/**
+ * The Unfinished Toggler: Inner Focus
+ */
+
 // Register defaults.
 UnfinishedToggler.prototype.registerDefault({
   // selector for elements within groups that if focused
