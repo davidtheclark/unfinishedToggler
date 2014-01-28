@@ -31,23 +31,28 @@ body {
 .carousel-content {
   position: absolute;
   top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
+  left: 100%;
+  height: 100%;
+  width: 100%;
   font-size: 7em;
   font-weight: bold;
-  display: none;
+  -webkit-transform: translateX(0);
+  -ms-transform: translateX(0);
+  transform: translateX(0);
 }
 
 .carousel-content.is-on {
-  display: block;
-  opacity: 0;
-  -webkit-transition: opacity 0.3s linear;
-  transition: opacity 0.3s linear;
+  -webkit-transform: translateX(-100%);
+  -ms-transform: translateX(-100%);
+  transform: translateX(-100%);
+  -webkit-transition: -webkit-transform 0.3s linear;
+  transition: transform 0.3s linear;
 }
 
-.carousel-content.is-on.is-trans {
-  opacity: 1;
+.carousel-content.is-on.is-trans-off {
+  -webkit-transform: translateX(-200%);
+  -ms-transform: translateX(-200%);
+  transform: translateX(-200%);
 }
 
 .carousel-content.m-1 {

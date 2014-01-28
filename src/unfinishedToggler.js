@@ -1,6 +1,109 @@
 function UnfinishedToggler(options) {
+  // Establish settings and initialize.
+  this.settings = $.extend({}, this.defaults, options);
+  this.init();
+}
+
+
+/*============================
+DEFAULT SETTINGS
+==============================*/
+
+$.extend(UnfinishedToggler.prototype, {
+
+  defaults: {
+    // selector for a context-element containing all the others,
+    // within which to find the toggler's parts
+    'root': 'body',
+    // class to turn groups and elements on
+    'onClass': 'uft-on',
+    // class to turn groups and elements off
+    'offClass': 'uft-off',
+    // `scattered` is true if related triggers and content
+    // are not children of the same group-containing elements.
+    // scattered groups are identified by data-uft-group attributes.
+    'scattered': false,
+    // selector for trigger elements
+    'triggerSelector': '.uft-trigger',
+    // selector for group-containing elements
+    // (only used if `{ scattered: false }`)
+    'groupSelector': '.uft-group',
+    // selector for content elements
+    // (only used if `{ scattered: true }`)
+    'contentSelector': '.uft-content',
+    // allow only one item to be on at a time
+    'onlyOneOn' : true,
+    // allow all items to be turned off at the same time
+    'allOff' : true,
+    // array of events that the triggers will listen for
+    'events': ['click'],
+    // namespace for uft-related events
+    'eventNamespace': 'uft',
+    // callback to perform after something is turned on
+    'onCallback': function(){},
+    // callback to perform after something is turned off
+    'offCallback': function(){},
+    // class that is added just after turning on
+    // and removed just before turning off,
+    // useful for adding extra CSS transitions
+    'transClass': 'uft-trans',
+    // delay between turning on and adding `transClass`;
+    // 40ms is minimum, in case turning on involves a `display` switch
+    'onTransDelay': 40,
+    // delay between removing `transClass` and turning off
+    'offTransTime': 0,
+    // `transOverlap` is true if groups are allowed to
+    // transition on while others are still transitioning off
+    'transOverlap': true
+  },
+
+  registerDefault: function(newDefaults) {
+    // `newDefaults` is an object containing new
+    // defaults from a plugin.
+    $.extend(this.defaults, newDefaults);
+  }
+
+});
+
+
+/*============================
+HOOKS
+==============================*/
+
+$.extend(UnfinishedToggler.prototype, {
+
+  hooks: {
+    // Run right away.
+    init: [],
+    // Bind triggers that enable the functionality to work.
+    enable: [],
+    // Unbind those triggers, so functionality does not work.
+    disable: []
+  },
+
+  registerHook: function(hook, fn) {
+    this.hooks[hook].push(fn);
+  },
+
+  execHook: function(hook) {
+    var fns = this.hooks[hook];
+    for (var i=0,l=fns.length;i<l;i++) {
+      // Hook functions receive the instance as `this`.
+      fns[i].call(this, null);
+    }
+  }
+
+});
+
+/*============================
+INITIALIZATION
+==============================*/
+
+// Register core functionality for `init` hook.
+UnfinishedToggler.prototype.registerHook('init', function() {
   var uft = this,
-  s = uft.settings = $.extend({}, uft.defaults, options);
+      s = uft.settings;
+
   uft.onCount = 0;
   uft.$root = $(s.root);
   uft.$triggers = uft.$root.find(s.triggerSelector);
@@ -10,72 +113,45 @@ function UnfinishedToggler(options) {
   // true, `$items` includes triggers and contents.
   uft.$items = (!s.scattered) ? uft.$root.find(s.groupSelector)
                               : uft.$triggers.add(uft.$root.find(s.contentSelector));
-  uft.init();
-}
 
-UnfinishedToggler.prototype = {
+  uft.data = {
+    // `isDebouncing` is used to ensure that toggling
+    // doesn't overlap already-toggling-toggling.
+    isDebouncing: false
+  };
 
-  /*============================
-  INITIALIZATION
-  ==============================*/
+  // `nmEvents` is a namespaced version of the triggering event(s).
+  uft.nmEvents = $.map(s.events, function(ev) {
+    return uft.namespaceEvent(ev);
+  }).join(' ');
 
-  init: function() {
-    var uft = this,
-        s = uft.settings;
+  // Enable!
+  uft.enable();
 
-    uft.data = {
-      // `isDebouncing` is used to ensure that toggling
-      // doesn't overlap already-toggling-toggling.
-      isDebouncing: false
-    };
+  // If nothing is turned on in the markup,
+  // but settings say all cannot be off,
+  // trigger the first trigger with the first event.
+  if ((!s.allOff && !uft.getOnItems().length))
+    uft.$triggers.first().trigger(uft.nmEvents.split(' ')[0]);
+});
 
-    // `nmEvents` is a namespaced version of the triggering event(s).
-    uft.nmEvents = $.map(s.events, function(ev) {
-      return uft.namespaceEvent(ev);
-    }).join(' ');
-
-    // Enable!
-    uft.enable();
-
-    // If nothing is turned on in the markup,
-    // but settings say all cannot be off,
-    // trigger the first trigger with the first event.
-    if ((!s.allOff && !uft.getOnItems().length))
-      uft.$triggers.first().trigger(uft.nmEvents.split(' ')[0]);
-
-    // NEXT AND PREV
-    // `groupIds` will contain the IDs of all groups, so methods
-    // .next() and .prev() can move in order.
-    uft.groupIds = [];
-    uft.groupIds = $.map(uft.$items, function(group, i) {
-      var thisGroupId = $(group).data('uft-group');
-      if (thisGroupId && uft.groupIds.indexOf(thisGroupId) === -1)
-        return thisGroupId;
-    });
-
-    // INNER FOCUS
-    // Enable innerFocus functionality, if settings say to do that.
-    if (s.innerFocus) {
-      uft.$root.find(s.innerFocus).on(uft.namespaceEvent('focus'), function(e) {
-        if (!uft.data.isDebouncing) {
-          // Firefox
-          uft.data.isDebouncing = true;
-          uft.innerFocus.call(uft, e);
-        }
-      });
-    }
-  },
+// `.init()` executes the 'init' hook, nothing more.
+UnfinishedToggler.prototype.init = function() {
+  this.execHook('init');
+};
 
 
-  /*============================
-  LITTLE UTIL FUNCTIONS
-  ==============================*/
+/*============================
+LITTLE CORE UTILITYS
+==============================*/
 
-  namespaceEvent: function(ev) {
+$.extend(UnfinishedToggler.prototype, {
+
+  namespaceEvent: function(eventName) {
     // Just add a namespace to an event.
+    var ev = eventName || '';
     return ev + '.' + this.settings.eventNamespace;
   },
-
 
   isOn: function($el) {
     // Check if an element is on.
@@ -124,47 +200,40 @@ UnfinishedToggler.prototype = {
       window.setTimeout(func, delay);
     else
       func();
-  },
+  }
+});
 
 
-  /*============================
-  CORE FUNCTIONALITY
-  ==============================*/
+/*============================
+CORE FUNCTIONALITY
+==============================*/
+
+// Register core functionality for `enable` hook.
+UnfinishedToggler.prototype.registerHook('enable', function() {
+  var uft = this;
+
+  // Bind triggers.
+  uft.$triggers.on(uft.nmEvents, function(e) {
+    if (!uft.data.isDebouncing) {
+      uft.data.isDebouncing = true;
+      uft.trigger.call(uft, this);
+    }
+  });
+});
+
+// Register core functionality for `disable` hook.
+UnfinishedToggler.prototype.registerHook('disable', function() {
+  this.$triggers.off(this.namespaceEvent());
+});
+
+$.extend(UnfinishedToggler.prototype, {
 
   enable: function() {
-    var uft = this,
-        s = uft.settings;
-
-    // Bind triggers.
-    uft.$triggers.on(uft.nmEvents, function(e) {
-      if (!uft.data.isDebouncing) {
-        uft.data.isDebouncing = true;
-        uft.trigger.call(uft, this);
-      }
-    });
-
-    // Bind next- and prev-triggers, if they exist.
-    if (s.nextSelector) {
-      $(s.nextSelector).on(uft.namespaceEvent('click'), function(e) {
-        uft.next.call(uft, this);
-      });
-    }
-    if (s.prevSelector) {
-      $(s.prevSelector).on(uft.namespaceEvent('click'), function(e) {
-        uft.prev.call(uft, this);
-      });
-    }
+    this.execHook('enable');
   },
 
   disable: function() {
-    var s = this.settings,
-        nmsp = '.' + s.eventNamespace;
-    // Unbind all triggers.
-    this.$triggers.off(nmsp);
-    if (s.nextSelector)
-      $(s.nextSelector).off(nmsp);
-    if (s.prevSelector)
-      $(s.prevSelector).off(nmsp);
+    this.execHook('disable');
   },
 
   trigger: function(input) {
@@ -427,79 +496,4 @@ UnfinishedToggler.prototype = {
       }
     }
   }
-};
-
-
-/*============================
-DEFAULT SETTINGS
-==============================*/
-
-UnfinishedToggler.prototype.defaults = {
-  // selector for a context-element containing all the others,
-  // within which to find the toggler's parts
-  'root': 'body',
-  // class to turn groups and elements on
-  'onClass': 'uft-on',
-  // class to turn groups and elements off
-  'offClass': 'uft-off',
-  // `scattered` is true if related triggers and content
-  // are not children of the same group-containing elements.
-  // scattered groups are identified by data-uft-group attributes.
-  'scattered': false,
-  // selector for trigger elements
-  'triggerSelector': '.uft-trigger',
-  // selector for group-containing elements
-  // (only used if `{ scattered: false }`)
-  'groupSelector': '.uft-group',
-  // selector for content elements
-  // (only used if `{ scattered: true }`)
-  'contentSelector': '.uft-content',
-  // allow only one item to be on at a time
-  'onlyOneOn' : true,
-  // allow all items to be turned off at the same time
-  'allOff' : true,
-  // array of events that the triggers will listen for
-  'events': ['click'],
-  // namespace for uft-related events
-  'eventNamespace': 'uft',
-  // callback to perform after something is turned on
-  'onCallback': function(){},
-  // callback to perform after something is turned off
-  'offCallback': function(){},
-  // class that is added just after turning on
-  // and removed just before turning off,
-  // useful for adding extra CSS transitions
-  'transClass': 'uft-trans',
-  // delay between turning on and adding `transClass`;
-  // 40ms is minimum, in case turning on involves a `display` switch
-  'onTransDelay': 40,
-  // delay between removing `transClass` and turning off
-  'offTransTime': 0,
-  // `transOverlap` is true if groups are allowed to
-  // transition on while others are still transitioning off
-  'transOverlap': true,
-
-  // NEXT AND PREV
-  // selector for elements that will turn on the next group
-  'nextSelector': false,
-  // selector for elements that will turn on the previous group
-  'prevSelector': false,
-
-  // FREEZE SCROLL
-  // freeze scrolling when a group is turned on;
-  // basically used only for popups/modals
-  'freezeScroll': false,
-
-  // INNER FOCUS
-  // selector for elements within groups that if focused
-  // will turn on their containing group
-  'innerFocus': false,
-
-  // OUTSIDE TURNS OFF
-  // either `true`, to indicate that clicking anywhere
-  // outside the turned-on group should turn it off,
-  // or selector for the region in which you are welcome to
-  // click without turning off the group (clicks outside that
-  // region will turn it off)
-  'outsideTurnsOff': false
-};
+});
