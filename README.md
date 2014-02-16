@@ -1,14 +1,14 @@
 # The UnfinishedToggler
 
-A simple but unusual jQuery plugin to ease the process of creating custom-designed UI components.
+A simple but atypical jQuery plugin to ease the process of creating custom-designed UI components.
 
-The UnfinishedToggler is "simple" because it simply toggles elements and groups of elements "on" or "off" in various ways, according to the rules you pass it. In fact, this is all that happens with most UI components (e.g. accordions, tabs, popups, modals, dropdowns): certain events make certain elements or groups of elements turn "on" or "off", according to some pattern, some set of rules. What makes an "accordion" different from a "popup" is just (a) the styling and (b) the rules that govern how the parts toggle.
+The UnfinishedToggler is "simple" because it simply toggles elements and groups of elements between "on" and "off" states, which are represented with classes that correspond to your styling. It can perform this toggling in various ways, according to the rules you pass it. In fact, this is all that happens with most UI components (e.g. accordions, tabs, popups, modals, dropdowns): certain events make certain elements or groups of elements turn "on" or "off", according to some pattern, some set of rules. What makes an "accordion" different from a "popup" is just (a) the styling and (b) the rules that govern how the parts change state.
 
-The UnfinishedToggler is "unusual" because it is a tool that might help you build your own stuff faster, rather than a pre-made thing that you can insert into your site with no further effort. It does not give you any out-of-the-box, pre-styled UI components: it's not a drop-in solution. It assumes that you're going to want to style your own component in your own way; all it's going to do is provide a little framework for the component's requisite JavaScript, into which you pass the particular rules that define your component's toggling behavior.
+The UnfinishedToggler is an "atypical" UI-related plugin because it is a tool that could help you build your own stuff faster, rather than a pre-made thing that you can insert into your site with no further effort. Most of all, it assumes that you're going to want to style your own component in your own way -- so you'll have to write some CSS. The UnfinishedToggler, meanwhile, provides a little framework for the component's requisite JavaScript, into which you pass the particular rules that define your component's toggling behavior. The JS will change classes on your elements: your CSS is what makes the classes matter.
 
-For instance:
+An example helps explain:
 
-What is a UI "accordion"? A set of sub-groups, each group consisting of a trigger and a panel of content; click a trigger to turn reveal its related panel. Then there are all kinds of minor variations: Some accordions have no panel open at first, while others have the first panel open. Some only allow one panel to be open at a time, so whenever you open another the rest must close; others allow you to open all panels at once. Some don't allow you to close all the panels at the same time -- at least one must be open; others allow you to close them all. Some have "next" and "previous" buttons that allow you to navigate from one panel to its neighbors; most don't. If you tab through the accordion maybe its panels will open when you focus on an anchor or button inside them. And so on.
+What is a UI "accordion"? A set of sub-groups, each group consisting of a trigger and a panel of content; click a trigger to reveal its related panel. Especially now that we have CSS transitions, this "revealing" is just the addition of a class. Then there are all kinds of minor variations: Some accordions have no panel open at first, while others have the first panel open. Some only allow one panel to be open at a time, so whenever you open another the rest must close; others allow you to open all panels at once. Some don't allow you to close all the panels at the same time -- at least one must be open; others allow you to close them all. Some have "next" and "previous" buttons that allow you to navigate from one panel to its neighbors; most don't. If you tab through the accordion maybe its panels will open when you focus on an anchor or button inside them. And so on.
 
 Tabs are essentially the same, but with a different visual style and a couple of more consistent rules: With tabs, typically, only one trigger/content group can be on at a time, and one *must* always be on, so you can't turn a group off except by turning another on. Most of the other variations mentioned above for accordions also relate to tabs.
 
@@ -28,6 +28,12 @@ The UnfinishedToggler is especially useful in providing code for certain common 
 
 Create a new instance and pass your settings.
 
+Here's a simple example:
+
+```js
+var basicAccordion = new UnfinishedToggler();
+```
+
 Here's an example with a bunch of settings:
 
 ```js
@@ -46,7 +52,7 @@ var carousel = new UnfinishedToggler({
 });
 ```
 
-And write some CSS so that the classes that get applied do the things you want done. Continuing the example, roughly:
+And write some CSS so that the classes that get applied do the things you want done. Continuing the carousel example, above, roughly:
 
 ```css
 .carousel-content {
