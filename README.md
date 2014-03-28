@@ -131,7 +131,7 @@ UnfinishedToggler.prototype.defaults = {
   // useful for adding extra CSS transitions
   'transClass': 'uft-trans',
   // delay between turning on and adding `transClass`;
-  // 40ms is minimum, in case turning on involves a `display` switch
+  // 40ms is minimum if turning on involves a `display` switch
   'onTransDelay': 40,
   // delay between removing `transClass` and turning off
   'offTransTime': 0,
