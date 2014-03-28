@@ -1,5 +1,10 @@
 # The UnfinishedToggler
 
+## Examples
+Have a look at this Codepen collection: http://codepen.io/collection/uCpHy/
+
+## What is it?
+
 A simple but atypical jQuery plugin to ease the process of creating custom-designed UI components.
 
 **The UnfinishedToggler is "simple" because it simply toggles elements and groups of elements between "on" and "off" states, which are represented with classes that correspond to your custom styling.** It can perform this toggling in various ways, according to the rules you pass it. In fact, this is all that happens with most UI components (e.g. accordions, tabs, popups, modals, dropdowns): certain events make certain elements or groups of elements turn "on" or "off", according to some pattern, some set of rules. What makes an "accordion" different from a "popup" is probably just (a) the styling and (b) the rules that govern how the parts change state.
@@ -161,11 +166,3 @@ UnfinishedToggler.prototype.defaults = {
   'outsideTurnsOff': false
 };
 ```
-
-## Usage
-
-Coming.
-
-## Examples
-
-Coming.
