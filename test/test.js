@@ -25,7 +25,8 @@ var carousel = new UnfinishedToggler({
   prevSelector: '#carousel-prev',
   allOff: false,
   scattered: true,
-  offTransTime: 300
+  offTransTime: 300,
+  nextInterval: 3000
 });
 
 var input = new UnfinishedToggler({

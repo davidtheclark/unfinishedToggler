@@ -499,7 +499,9 @@ UnfinishedToggler.prototype.registerDefault({
   // selector for elements that will turn on the next group
   'nextSelector': false,
   // selector for elements that will turn on the previous group
-  'prevSelector': false
+  'prevSelector': false,
+  // interval for automatically moving to the next group (e.g. 7000)
+  'nextInterval': false
 });
 
 // What it does.
@@ -546,7 +548,7 @@ UnfinishedToggler.prototype.registerHook('init', function() {
   uft.groupIds = [];
   uft.groupIds = $.map(uft.$items, function(group, i) {
     var thisGroupId = $(group).data('uft-group');
-    if (thisGroupId && uft.groupIds.indexOf(thisGroupId) === -1)
+    if (thisGroupId && $.inArray(thisGroupId, uft.groupIds) === -1)
       return thisGroupId;
   });
 });
@@ -555,6 +557,7 @@ UnfinishedToggler.prototype.registerHook('init', function() {
 UnfinishedToggler.prototype.registerHook('enable', function() {
   var uft = this,
       s = uft.settings;
+
   // Bind next- and prev-triggers, if they exist.
   if (s.nextSelector) {
     $(s.nextSelector).on(uft.namespaceEvent('click'), function(e) {
@@ -565,6 +568,29 @@ UnfinishedToggler.prototype.registerHook('enable', function() {
     $(s.prevSelector).on(uft.namespaceEvent('click'), function(e) {
       uft.prev.call(uft, this);
     });
+  }
+
+  // Setup interval
+  if (s.nextInterval) {
+    uft.createInterval = function() {
+      uft.timeout = setTimeout(uft.intervalFn, s.nextInterval);
+    };
+    uft.intervalFn = function() {
+      uft.next.call(uft, this);
+    };
+    uft.resetInterval = function() {
+      clearInterval(uft.timeout);
+      uft.createInterval();
+    };
+    // Start it
+    uft.createInterval();
+  }
+});
+
+// Reset interval on trigger
+UnfinishedToggler.prototype.registerHook('trigger', function() {
+  if (this.settings.nextInterval) {
+    this.resetInterval();
   }
 });
 

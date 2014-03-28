@@ -139,6 +139,8 @@ UnfinishedToggler.prototype.defaults = {
   'nextSelector': false,
   // selector for elements that will turn on the previous group
   'prevSelector': false,
+  // interval for automatically moving to the next group (e.g. 7000)
+  'nextInterval': false,
 
   // FREEZE SCROLL
   // freeze scrolling when a group is turned on;
